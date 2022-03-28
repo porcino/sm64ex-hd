@@ -716,8 +716,8 @@ res: $(BASEPACK_PATH)
 
 # prepares the basepack.lst
 $(BASEPACK_LST): $(EXE)
-	@wget -O $(BUILD_DIR)/$(BASEDIR)/textures.zip 'https://onedrive.live.com/download?cid=AAE90FF56FF2B195&resid=AAE90FF56FF2B195%21128&authkey=AF8cMUuHjKt5rvk'
 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
+	@wget -O $(BUILD_DIR)/$(BASEDIR)/textures.zip 'https://onedrive.live.com/download?cid=AAE90FF56FF2B195&resid=AAE90FF56FF2B195%21128&authkey=AF8cMUuHjKt5rvk'
 	@echo -n > $(BASEPACK_LST)
 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
 	@echo "$(BUILD_DIR)/sound/sequences.bin sound/sequences.bin" >> $(BASEPACK_LST)
