@@ -22,3 +22,11 @@ ALIGNED8 static const u8 wdw_seg7_texture_07001800[] = {
 ALIGNED8 static const u8 wdw_seg7_texture_07002000[] = {
 #include "levels/wdw/4.rgba16.inc.c"
 };
+
+ALIGNED8 static const u8 wdw_seg7_texture_07002800[] = {
+#include "levels/wdw/5.rgba16.inc.c"
+};
+
+ALIGNED8 static const u8 wdw_seg7_texture_07003000[] = {
+#include "levels/wdw/6.rgba16.inc.c"
+};

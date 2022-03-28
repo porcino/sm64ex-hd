@@ -74,4 +74,7 @@ extern const Collision bitdw_seg7_collision_0700FD9C[];
 // script
 extern const LevelScript level_bitdw_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+#include "actors/breakable_box/geo_header.h"
+
 #endif

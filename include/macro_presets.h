@@ -98,7 +98,7 @@ struct MacroPreset MacroObjectPresets[] = {
     {bhvHeaveHo, MODEL_HEAVE_HO, 0},
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0},
     {bhvThwomp2, MODEL_THWOMP, 0}, // unused
-    {bhvFireSpitter, MODEL_BOWLING_BALL, 0},
+    {bhvFireSpitter, MODEL_SPITTER, 0},
     {bhvFlyGuy, MODEL_FLYGUY, 1},
     {bhvJumpingBox, MODEL_BREAKABLE_BOX, 0},
     {bhvTripletButterfly, MODEL_BUTTERFLY, 0},
@@ -378,7 +378,9 @@ struct MacroPreset MacroObjectPresets[] = {
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0},
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0},
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0},
-    {bhvYellowCoin, MODEL_YELLOW_COIN, 0}
+    {bhvYellowCoin, MODEL_YELLOW_COIN, 0},
+    {bhvGoomba, 0xF2, 0},
+    {bhvFlowers, 0x39, 0}
 };
 
 #endif // MACRO_PRESETS_H

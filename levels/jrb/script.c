@@ -140,9 +140,12 @@ const LevelScript level_jrb_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_JRB_FALLING_PILLAR,       jrb_geo_000900),
     LOAD_MODEL_FROM_GEO(MODEL_JRB_FALLING_PILLAR_BASE,  jrb_geo_000918),
     LOAD_MODEL_FROM_GEO(MODEL_JRB_FLOATING_PLATFORM,    jrb_geo_000948),
+    LOAD_MODEL_FROM_GEO(0xF4,                           purple_switch_base_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_BREAKABLE_BOX_SMALL,      breakable_box_hmc_geo),
 
     AREA(/*index*/ 1, jrb_geo_000A18),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -6750, 2126, 1482, /*angle*/ 0, 90, 0, /*behParam*/ 0x000A0000, /*beh*/ bhvSpinAirborneWarp),
+        OBJECT(/*model*/ 0xF4,       /*pos*/  2260, 1545, 6854, /*angle*/ 0, 45, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         WARP_NODE(/*id*/ 0x0A, /*destLevel*/ LEVEL_JRB, /*destArea*/ 0x01, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0xF3, /*destLevel*/ LEVEL_JRB, /*destArea*/ 0x02, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0xF0, /*destLevel*/ LEVEL_CASTLE, /*destArea*/ 0x01, /*destNode*/ 0x35, /*flags*/ WARP_NO_CHECKPOINT),

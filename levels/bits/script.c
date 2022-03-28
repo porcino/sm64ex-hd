@@ -88,11 +88,13 @@ const LevelScript level_bits_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_BITS_STAIRCASE_FRAME3,       bits_geo_0006E8),
     LOAD_MODEL_FROM_GEO(MODEL_BITS_STAIRCASE_FRAME4,       bits_geo_000700),
     LOAD_MODEL_FROM_GEO(MODEL_BITS_WARP_PIPE,              warp_pipe_geo),
+    LOAD_MODEL_FROM_GEO(0xF2,                              purple_switch_base_geo),
 
     AREA(/*index*/ 1, bits_geo_000718),
         OBJECT(/*model*/ MODEL_NONE,           /*pos*/ -7039, -3812,     4, /*angle*/ 0, 90, 0,  /*behParam*/ 0x000A0000, /*beh*/ bhvAirborneWarp),
         OBJECT(/*model*/ MODEL_BITS_WARP_PIPE, /*pos*/   351,  6652, -6030, /*angle*/ 0, 0, 0,   /*behParam*/ 0x000B0000, /*beh*/ bhvWarpPipe),
         OBJECT(/*model*/ MODEL_NONE,           /*pos*/   351,  6800, -3900, /*angle*/ 0, 180, 0, /*behParam*/ 0x000C0000, /*beh*/ bhvDeathWarp),
+        OBJECT(/*model*/ 0xF2,                 /*pos*/  -279,  -224,  -900, /*angle*/ 0,   0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         WARP_NODE(/*id*/ 0x0A, /*destLevel*/ LEVEL_BITS, /*destArea*/ 0x01, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0B, /*destLevel*/ LEVEL_BOWSER_3, /*destArea*/ 0x01, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0C, /*destLevel*/ LEVEL_BITS, /*destArea*/ 0x01, /*destNode*/ 0x0C, /*flags*/ WARP_NO_CHECKPOINT),

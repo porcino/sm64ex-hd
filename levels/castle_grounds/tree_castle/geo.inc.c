@@ -1,0 +1,16 @@
+const GeoLayout tree_castle_geo[] = {
+	GEO_NODE_START(),
+	GEO_OPEN_NODE(),
+		GEO_CULLING_RADIUS(800),
+		GEO_RENDER_RANGE(-2048, 5000),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_ALPHA, tree_castle_000_displaylist_mesh),
+		GEO_CLOSE_NODE(),
+		GEO_RENDER_RANGE(5000, 32767),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_ALPHA, tree_castle_low_000_displaylist_mesh),
+		GEO_CLOSE_NODE(),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, tree_castle_material_revert_render_settings),
+	GEO_CLOSE_NODE(),
+	GEO_END(),
+};

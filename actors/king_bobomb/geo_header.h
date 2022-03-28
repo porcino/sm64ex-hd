@@ -1,0 +1,31 @@
+extern const GeoLayout king_bobomb_geo[];
+extern Vtx king_bobomb_000_displaylist_mesh_vtx_0[2024];
+extern Gfx king_bobomb_000_displaylist_mesh_tri_0[];
+extern Vtx king_bobomb_000_offset_006_mesh_vtx_0[363];
+extern Gfx king_bobomb_000_offset_006_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_001_mesh_vtx_0[112];
+extern Gfx king_bobomb_000_displaylist_001_mesh_tri_0[];
+extern Vtx king_bobomb_000_offset_010_mesh_vtx_0[360];
+extern Gfx king_bobomb_000_offset_010_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_002_mesh_vtx_0[114];
+extern Gfx king_bobomb_000_displaylist_002_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_003_mesh_vtx_0[361];
+extern Gfx king_bobomb_000_displaylist_003_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_004_mesh_vtx_0[440];
+extern Gfx king_bobomb_000_displaylist_004_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_005_mesh_vtx_0[359];
+extern Gfx king_bobomb_000_displaylist_005_mesh_tri_0[];
+extern Vtx king_bobomb_000_displaylist_006_mesh_vtx_0[436];
+extern Gfx king_bobomb_000_displaylist_006_mesh_tri_0[];
+
+extern Gfx king_bobomb_000_displaylist_mesh[];
+extern Gfx king_bobomb_000_offset_006_mesh[];
+extern Gfx king_bobomb_000_displaylist_001_mesh[];
+extern Gfx king_bobomb_000_offset_010_mesh[];
+extern Gfx king_bobomb_000_displaylist_002_mesh[];
+extern Gfx king_bobomb_000_displaylist_003_mesh[];
+extern Gfx king_bobomb_000_displaylist_004_mesh[];
+extern Gfx king_bobomb_000_displaylist_005_mesh[];
+extern Gfx king_bobomb_000_displaylist_006_mesh[];
+extern Gfx king_bobomb_material_revert_render_settings[];
+

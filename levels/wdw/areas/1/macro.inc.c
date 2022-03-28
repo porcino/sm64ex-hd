@@ -28,7 +28,7 @@ const MacroObject wdw_seg7_area_1_macro_objs[] = {
     MACRO_OBJECT(/*preset*/ macro_hidden_star_trigger,         /*yaw*/   0, /*pos*/ -3760,   650,  4120),
     MACRO_OBJECT_WITH_BEH_PARAM(/*preset*/ macro_circling_amp,                /*yaw*/   0, /*pos*/  -827,  3880,  -827, /*behParam*/ 2),
     MACRO_OBJECT(/*preset*/ macro_breakable_box_no_coins,      /*yaw*/   0, /*pos*/  1360,   205, -1384),
-    MACRO_OBJECT(/*preset*/ macro_floor_switch_hidden_objects, /*yaw*/   0, /*pos*/   920,  2300,  -840),
+    MACRO_OBJECT(/*preset*/ macro_floor_switch_hidden_objects, /*yaw*/   0, /*pos*/   920,  2304,  -840),
     MACRO_OBJECT(/*preset*/ macro_hidden_box,                  /*yaw*/   0, /*pos*/   470,  2300, -1310),
     MACRO_OBJECT(/*preset*/ macro_hidden_box,                  /*yaw*/   0, /*pos*/   470,  2500, -1510),
     MACRO_OBJECT(/*preset*/ macro_hidden_box,                  /*yaw*/   0, /*pos*/   470,  2700, -1710),

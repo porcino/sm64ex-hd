@@ -121,3 +121,7 @@ ALIGNED8 const u8 grass_0900B000[] = {
 ALIGNED8 const u8 grass_0900B800[] = {
 #include "textures/grass/wf_textures.0B800.ia16.inc.c"
 };
+
+ALIGNED8 const u8 grass_0900B800_2[] = {
+#include "textures/grass/wf_textures.0B800_2.ia16.inc.c"
+};

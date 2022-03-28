@@ -1,0 +1,31 @@
+extern const GeoLayout lakitu_geo[];
+extern Vtx lakitu_cameraman_000_offset_001_mesh_vtx_0[677];
+extern Gfx lakitu_cameraman_000_offset_001_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_offset_002_mesh_vtx_0[434];
+extern Gfx lakitu_cameraman_000_offset_002_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_displaylist_mesh_vtx_0[220];
+extern Gfx lakitu_cameraman_000_displaylist_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_offset_003_mesh_vtx_0[115];
+extern Gfx lakitu_cameraman_000_offset_003_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_offset_004_mesh_vtx_0[115];
+extern Gfx lakitu_cameraman_000_offset_004_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_offset_006_mesh_vtx_0[3];
+extern Gfx lakitu_cameraman_000_offset_006_mesh_tri_0[];
+extern Vtx lakitu_cameraman_000_offset_007_mesh_vtx_0[364];
+extern Gfx lakitu_cameraman_000_offset_007_mesh_tri_0[];
+extern Vtx lakitu_cameraman_002_offset_001_mesh_vtx_0[3];
+extern Gfx lakitu_cameraman_002_offset_001_mesh_tri_0[];
+extern Vtx lakitu_cameraman_002_offset_002_mesh_vtx_0[28];
+extern Gfx lakitu_cameraman_002_offset_002_mesh_tri_0[];
+
+extern Gfx lakitu_cameraman_000_offset_001_mesh[];
+extern Gfx lakitu_cameraman_000_offset_002_mesh[];
+extern Gfx lakitu_cameraman_000_displaylist_mesh[];
+extern Gfx lakitu_cameraman_000_offset_003_mesh[];
+extern Gfx lakitu_cameraman_000_offset_004_mesh[];
+extern Gfx lakitu_cameraman_000_offset_006_mesh[];
+extern Gfx lakitu_cameraman_000_offset_007_mesh[];
+extern Gfx lakitu_cameraman_002_offset_001_mesh[];
+extern Gfx lakitu_cameraman_002_offset_002_mesh[];
+extern Gfx lakitu_cameraman_material_revert_render_settings[];
+

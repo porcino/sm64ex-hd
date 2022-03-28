@@ -107,7 +107,7 @@ static const Vtx bowser_2_seg7_vertex_07000C30[] = {
 
 // 0x07000D30 - 0x07000E28
 const Gfx bowser_2_seg7_dl_07000D30[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, fire_09009800),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, bowser_2_seg7_texture_07000001),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(bowser_2_seg7_vertex_07000800, 16, 0),
@@ -192,8 +192,10 @@ const Gfx bowser_2_seg7_dl_07000FE0[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(bowser_2_seg7_dl_07000D30),
+    gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(bowser_2_seg7_dl_07000E28),
     gsSPDisplayList(bowser_2_seg7_dl_07000ED0),
+    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(bowser_2_seg7_dl_07000F38),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),

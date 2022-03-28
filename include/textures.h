@@ -98,6 +98,7 @@ extern const u8 grass_0900A000[];
 extern const u8 grass_0900A800[];
 extern const u8 grass_0900B000[];
 extern const u8 grass_0900B800[];
+extern const u8 grass_0900B800_2[];
 
 // inside
 extern const u8 inside_09000000[];
@@ -117,6 +118,7 @@ extern const u8 inside_09009000[];
 extern const u8 inside_0900A000[];
 extern const u8 inside_0900B000[];
 extern const u8 inside_0900B800[];
+extern const u8 inside_0900C000[];
 
 // machine
 extern const u8 machine_09000000[];
@@ -182,6 +184,8 @@ extern const u8 outside_0900A800[];
 extern const u8 outside_0900B000[];
 extern const u8 outside_0900B400[];
 extern const u8 outside_0900BC00[];
+extern const u8 outside_0900C400[];
+extern const u8 outside_0900D400[];
 
 // sky
 extern const u8 sky_09000000[];

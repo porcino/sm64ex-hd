@@ -41,4 +41,8 @@ extern const Gfx castle_grounds_dl_waterfall[];
 // script
 extern const LevelScript level_castle_grounds_entry[];
 
+#include "castle_window/geo_header.h"
+#include "tree_castle/geo_header.h"
+#include "../../actors/bird/geo_header.h"
+
 #endif

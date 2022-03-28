@@ -135,4 +135,7 @@ extern const GeoLayout bowser_1_yellow_sphere_geo[];
 extern const Gfx yellow_sphere_seg6_dl_0601F388[];
 extern const Gfx yellow_sphere_seg6_dl_0601F3C0[];
 
+#include "bowser/geo_header.h"
+#include "bomb/geo_header.h"
+
 #endif

@@ -46,4 +46,6 @@ extern const struct MovtexQuadCollection wdw_movtex_area2_water[];
 // script
 extern const LevelScript level_wdw_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+
 #endif

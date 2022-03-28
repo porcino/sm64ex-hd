@@ -1104,7 +1104,7 @@ const Gfx ttc_seg7_dl_0700E878[] = {
     gsDPSetCycleType(G_CYC_2CYCLE),
     gsDPSetRenderMode(G_RM_FOG_SHADE_A, G_RM_AA_ZB_TEX_EDGE2),
     gsDPSetDepthSource(G_ZS_PIXEL),
-    gsDPSetFogColor(200, 255, 255, 255),
+    gsDPSetFogColor(32, 32, 16, 255),
     gsSPFogPosition(900, 1000),
     gsSPSetGeometryMode(G_FOG),
     gsDPSetCombineMode(G_CC_DECALRGBA, G_CC_PASS2),

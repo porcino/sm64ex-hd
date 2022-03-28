@@ -2142,7 +2142,7 @@ static const Gfx ttm_seg7_dl_07023108[] = {
 
 // 0x070240F0 - 0x07024178
 static const Gfx ttm_seg7_dl_070240F0[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mountain_09007000),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, mountain_0900B800),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(ttm_seg7_vertex_07021898, 15, 0),
@@ -2350,6 +2350,7 @@ const Gfx ttm_seg7_dl_070249A0[] = {
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(ttm_seg7_dl_07022F08),
     gsSPDisplayList(ttm_seg7_dl_07023108),
+    gsDPSetTileSize(0, 0, 0, (256 - 1) << G_TEXTURE_IMAGE_FRAC, (512 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(ttm_seg7_dl_070240F0),
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD),

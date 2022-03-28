@@ -132,7 +132,7 @@ const Gfx wf_seg7_dl_070064E8[] = {
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
+    gsDPSetTileSize(0, 0, 0, (128 - 1) << G_TEXTURE_IMAGE_FRAC, (128 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(wf_seg7_dl_070063A0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),

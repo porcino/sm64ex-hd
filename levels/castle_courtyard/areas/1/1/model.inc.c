@@ -1189,7 +1189,7 @@ static const Gfx castle_courtyard_seg7_dl_070036F0[] = {
 
 // 0x070039D0 - 0x07003AF8
 static const Gfx castle_courtyard_seg7_dl_070039D0[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_09009000),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_0900D400),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(castle_courtyard_seg7_vertex_07000A80, 16, 0),

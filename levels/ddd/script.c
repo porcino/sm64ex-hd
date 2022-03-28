@@ -80,6 +80,7 @@ const LevelScript level_ddd_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_DDD_BOWSER_SUB_DOOR, ddd_geo_000478),
     LOAD_MODEL_FROM_GEO(MODEL_DDD_BOWSER_SUB,      ddd_geo_0004A0),
     LOAD_MODEL_FROM_GEO(MODEL_DDD_POLE,            ddd_geo_000450),
+    LOAD_MODEL_FROM_GEO(0xF4,                      purple_switch_base_geo),
 
     AREA(/*index*/ 1, ddd_geo_0004C0),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -3071, 3000, 0, /*angle*/ 0, 7, 0, /*behParam*/ 0x000A0000, /*beh*/ bhvSpinAirborneWarp),
@@ -97,6 +98,7 @@ const LevelScript level_ddd_entry[] = {
     END_AREA(),
 
     AREA(/*index*/ 2, ddd_geo_000570),
+        OBJECT(/*model*/ 0xF4, /*pos*/  6800, 119, 2000, /*angle*/ 0, 0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         WHIRLPOOL(/*unk2*/ 0, /*unk3*/ 0, /*pos*/ 3355, -3575, -515, /*strength*/ -30),
         WHIRLPOOL(/*unk2*/ 1, /*unk3*/ 2, /*pos*/ 3917, -2040, -6041, /*strength*/ 50),
         WARP_NODE(/*id*/ 0xF0, /*destLevel*/ LEVEL_CASTLE, /*destArea*/ 0x03, /*destNode*/ 0x35, /*flags*/ WARP_NO_CHECKPOINT),

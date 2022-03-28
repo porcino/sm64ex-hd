@@ -89,4 +89,6 @@ extern const Collision bits_seg7_collision_0701B734[];
 // script
 extern const LevelScript level_bits_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+
 #endif

@@ -39,4 +39,6 @@ extern const struct MovtexQuadCollection thi_movtex_area2_water[];
 // script
 extern const LevelScript level_thi_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+
 #endif

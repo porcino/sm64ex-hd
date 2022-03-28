@@ -589,7 +589,7 @@ static const Gfx ddd_seg7_dl_0700A600[] = {
 
 // 0x0700AEB8 - 0x0700AF10
 static const Gfx ddd_seg7_dl_0700AEB8[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, water_0900A000),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, ddd_seg7_texture_07001800),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(ddd_seg7_vertex_0700A580, 8, 0),
@@ -609,6 +609,7 @@ const Gfx ddd_seg7_dl_0700AF10[] = {
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(ddd_seg7_dl_0700A600),
+    gsDPSetTileSize(0, 0, 0, (96 - 1) << G_TEXTURE_IMAGE_FRAC, (56 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(ddd_seg7_dl_0700AEB8),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
     gsDPPipeSync(),

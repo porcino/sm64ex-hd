@@ -706,7 +706,7 @@ static const Gfx castle_grounds_seg7_dl_07008BF0[] = {
 
 // 0x07008D70 - 0x07008DE8
 static const Gfx castle_grounds_seg7_dl_07008D70[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_09009000),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_0900D400),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPLight(&castle_grounds_seg7_lights_07006F08.l, 1),
@@ -854,7 +854,7 @@ static const Gfx castle_grounds_seg7_dl_07009010[] = {
 
 // 0x07009330 - 0x07009568
 static const Gfx castle_grounds_seg7_dl_07009330[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_09004800),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, outside_0900C400),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 64 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPLight(&castle_grounds_seg7_lights_07006F80.l, 1),

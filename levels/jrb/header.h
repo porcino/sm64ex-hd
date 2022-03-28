@@ -63,4 +63,7 @@ extern const struct MovtexQuadCollection jrb_movtex_sinked_boat_water[];
 // script
 extern const LevelScript level_jrb_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+#include "actors/breakable_box/geo_header.h"
+
 #endif

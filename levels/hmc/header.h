@@ -90,4 +90,8 @@ extern const struct MovtexQuadCollection hmc_movtex_toxic_maze_mist[];
 // script
 extern const LevelScript level_hmc_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+#include "rolling_rock/geo_header.h"
+#include "actors/breakable_box/geo_header.h"
+
 #endif

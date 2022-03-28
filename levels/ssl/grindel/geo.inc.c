@@ -1,12 +1,11 @@
-// 0x0E000734
 const GeoLayout ssl_geo_000734[] = {
-   GEO_CULLING_RADIUS(700),
-   GEO_OPEN_NODE(),
-      GEO_SHADOW(SHADOW_SQUARE_SCALABLE, 0xB4, 550),
-      GEO_OPEN_NODE(),
-         GEO_DISPLAY_LIST(LAYER_OPAQUE, ssl_seg7_dl_070220A8),
-         GEO_DISPLAY_LIST(LAYER_ALPHA, ssl_seg7_dl_070221E8),
-      GEO_CLOSE_NODE(),
-   GEO_CLOSE_NODE(),
-   GEO_END(),
+	GEO_CULLING_RADIUS(700),
+	GEO_OPEN_NODE(),
+		GEO_SHADOW(0, 180, 550),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_OPAQUE, grindel_000_displaylist_mesh),
+		GEO_CLOSE_NODE(),
+	GEO_CLOSE_NODE(),
+	GEO_DISPLAY_LIST(LAYER_OPAQUE, grindel_material_revert_render_settings),
+	GEO_END(),
 };

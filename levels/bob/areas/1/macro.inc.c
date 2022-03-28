@@ -88,5 +88,8 @@ const MacroObject bob_seg7_macro_objs[] = {
     MACRO_OBJECT(/*preset*/ macro_coin_ring_vertical,        /*yaw*/  90, /*pos*/  -300,  4000,  1250),
     MACRO_OBJECT(/*preset*/ macro_yellow_coin,               /*yaw*/   0, /*pos*/  -300,  4200,  1250),
     MACRO_OBJECT(/*preset*/ macro_breakable_box_small,       /*yaw*/   0, /*pos*/ -6800,  1024,    40),
+    MACRO_OBJECT(/*preset*/ macro_flowers,                   /*yaw*/   0, /*pos*/ -6612,  1024, -3351),
+    MACRO_OBJECT(/*preset*/ macro_flowers,                   /*yaw*/   0, /*pos*/  1980,   768,  6618),
+    MACRO_OBJECT(/*preset*/ macro_flowers,                   /*yaw*/   0, /*pos*/ -6060,  1024, -5340),
     MACRO_OBJECT_END(),
 };

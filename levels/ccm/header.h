@@ -57,4 +57,7 @@ extern const Trajectory ccm_seg7_trajectory_penguin_race[];
 // script
 extern const LevelScript level_ccm_entry[];
 
+#include "snowman_head/geo_header.h"
+#include "snowman_base/geo_header.h"
+
 #endif

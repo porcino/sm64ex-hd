@@ -31,4 +31,7 @@ extern const Trajectory bob_seg7_trajectory_koopa[];
 // script
 extern const LevelScript level_bob_entry[];
 
+#include "flowers/geo_header.h"
+#include "actors/purple_switch_base/geo_header.h"
+
 #endif

@@ -91,11 +91,14 @@ const LevelScript level_wdw_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_WDW_EXPRESS_ELEVATOR,              wdw_geo_000610),
     LOAD_MODEL_FROM_GEO(MODEL_WDW_RECTANGULAR_FLOATING_PLATFORM, wdw_geo_000628),
     LOAD_MODEL_FROM_GEO(MODEL_WDW_ROTATING_PLATFORM,             wdw_geo_000640),
+    LOAD_MODEL_FROM_GEO(0xF2,                                    purple_switch_base_geo),
 
     AREA(/*index*/ 1, wdw_geo_000658),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/  3395, 3580,  384, /*angle*/ 0, 180, 0, /*behParam*/ 0x000A0000, /*beh*/ bhvSpinAirborneWarp),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/   818,    0, 3634, /*angle*/ 0,  45, 0, /*behParam*/ 0x000B0000, /*beh*/ bhvFadingWarp),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -2865, 3328, 3065, /*angle*/ 0,   0, 0, /*behParam*/ 0x000C0000, /*beh*/ bhvFadingWarp),
+        OBJECT(/*model*/ 0xF2,       /*pos*/   920, 2313, -840, /*angle*/ 0,   0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
+        OBJECT(/*model*/ 0xF2,       /*pos*/  3360, 1289, 3420, /*angle*/ 0,   0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         WARP_NODE(/*id*/ 0x0A, /*destLevel*/ LEVEL_WDW, /*destArea*/ 0x01, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0B, /*destLevel*/ LEVEL_WDW, /*destArea*/ 0x01, /*destNode*/ 0x0C, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0C, /*destLevel*/ LEVEL_WDW, /*destArea*/ 0x01, /*destNode*/ 0x0B, /*flags*/ WARP_NO_CHECKPOINT),
@@ -111,6 +114,7 @@ const LevelScript level_wdw_entry[] = {
     END_AREA(),
 
     AREA(/*index*/ 2, wdw_geo_000724),
+        OBJECT(/*model*/ 0xF2,  /*pos*/  -1523, -2506, -1940, /*angle*/ 0, 0, 2, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         JUMP_LINK(script_func_local_4),
         JUMP_LINK(script_func_local_2),
         WARP_NODE(/*id*/ 0xF0, /*destLevel*/ LEVEL_CASTLE, /*destArea*/ 0x02, /*destNode*/ 0x32, /*flags*/ WARP_NO_CHECKPOINT),

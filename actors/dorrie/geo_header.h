@@ -1,0 +1,33 @@
+extern const GeoLayout dorrie_geo[];
+extern Vtx dorrie_000_offset_001_mesh_vtx_0[1442];
+extern Gfx dorrie_000_offset_001_mesh_tri_0[];
+extern Vtx dorrie_000_offset_002_mesh_vtx_0[881];
+extern Gfx dorrie_000_offset_002_mesh_tri_0[];
+extern Vtx dorrie_000_offset_004_mesh_vtx_0[2375];
+extern Gfx dorrie_000_offset_004_mesh_tri_0[];
+extern Vtx dorrie_000_offset_004_mesh_vtx_1[252];
+extern Gfx dorrie_000_offset_004_mesh_tri_1[];
+extern Vtx dorrie_000_offset_005_mesh_vtx_0[912];
+extern Gfx dorrie_000_offset_005_mesh_tri_0[];
+extern Vtx dorrie_000_offset_006_mesh_vtx_0[882];
+extern Gfx dorrie_000_offset_006_mesh_tri_0[];
+extern Vtx dorrie_000_offset_008_mesh_vtx_0[568];
+extern Gfx dorrie_000_offset_008_mesh_tri_0[];
+extern Vtx dorrie_000_offset_009_mesh_vtx_0[589];
+extern Gfx dorrie_000_offset_009_mesh_tri_0[];
+extern Vtx dorrie_000_offset_010_mesh_vtx_0[557];
+extern Gfx dorrie_000_offset_010_mesh_tri_0[];
+extern Vtx dorrie_000_offset_011_mesh_vtx_0[588];
+extern Gfx dorrie_000_offset_011_mesh_tri_0[];
+
+extern Gfx dorrie_000_offset_001_mesh[];
+extern Gfx dorrie_000_offset_002_mesh[];
+extern Gfx dorrie_000_offset_004_mesh[];
+extern Gfx dorrie_000_offset_005_mesh[];
+extern Gfx dorrie_000_offset_006_mesh[];
+extern Gfx dorrie_000_offset_008_mesh[];
+extern Gfx dorrie_000_offset_009_mesh[];
+extern Gfx dorrie_000_offset_010_mesh[];
+extern Gfx dorrie_000_offset_011_mesh[];
+extern Gfx dorrie_material_revert_render_settings[];
+

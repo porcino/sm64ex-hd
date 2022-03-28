@@ -111,4 +111,6 @@ extern const MacroObject ttm_seg7_area_4_macro_objs[];
 // script
 extern const LevelScript level_ttm_entry[];
 
+#include "actors/purple_switch_base/geo_header.h"
+
 #endif

@@ -2239,7 +2239,7 @@ static const Gfx wdw_seg7_dl_07009268[] = {
 
 // 0x07009358 - 0x07009850
 static const Gfx wdw_seg7_dl_07009358[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, grass_09008000),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, wdw_seg7_texture_07002800),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPVertex(wdw_seg7_vertex_070065B0, 15, 0),
@@ -2413,11 +2413,14 @@ const Gfx wdw_seg7_dl_07009AB0[] = {
     gsSPDisplayList(wdw_seg7_dl_07008160),
     gsSPDisplayList(wdw_seg7_dl_07008598),
     gsSPDisplayList(wdw_seg7_dl_070087B8),
+    gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(wdw_seg7_dl_07008910),
+    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(wdw_seg7_dl_07008B00),
     gsSPDisplayList(wdw_seg7_dl_07008C00),
     gsSPDisplayList(wdw_seg7_dl_07008CA0),
     gsSPDisplayList(wdw_seg7_dl_07008E08),
+    gsDPSetTileSize(0, 0, 0, (64 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),
     gsSPDisplayList(wdw_seg7_dl_07009268),
     gsSPDisplayList(wdw_seg7_dl_07009358),
     gsSPDisplayList(wdw_seg7_dl_07009850),

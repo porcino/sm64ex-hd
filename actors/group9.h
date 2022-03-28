@@ -81,4 +81,7 @@ extern const Gfx small_key_seg5_dl_05006A28[];
 extern const Gfx small_key_seg5_dl_05006A48[];
 extern const Gfx small_key_seg5_dl_05006A68[];
 
+#include "boo/geo_header.h"
+#include "mad_piano/geo_header.h"
+
 #endif

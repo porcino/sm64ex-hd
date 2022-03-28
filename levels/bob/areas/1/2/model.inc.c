@@ -1732,14 +1732,14 @@ static const Gfx bob_seg7_dl_07009768[] = {
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, bob_seg7_texture_07001000),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPVertex(bob_seg7_vertex_07007370, 16, 0),
+    /* gsSPVertex(bob_seg7_vertex_07007370, 16, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
     gsSP2Triangles( 3,  6,  7, 0x0,  3,  7,  8, 0x0),
     gsSP2Triangles( 3,  8,  4, 0x0,  9, 10, 11, 0x0),
     gsSP2Triangles( 9, 12, 13, 0x0,  9, 11, 12, 0x0),
     gsSP2Triangles( 9, 14, 10, 0x0,  0, 15,  1, 0x0),
     gsSPVertex(bob_seg7_vertex_07007470, 5, 0),
-    gsSP2Triangles( 0,  1,  2, 0x0,  0,  3,  4, 0x0),
+    gsSP2Triangles( 0,  1,  2, 0x0,  0,  3,  4, 0x0), */
     gsSPEndDisplayList(),
 };
 
@@ -1748,7 +1748,7 @@ static const Gfx bob_seg7_dl_070097F8[] = {
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, bob_seg7_texture_07001800),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPVertex(bob_seg7_vertex_070074C0, 15, 0),
+    /* gsSPVertex(bob_seg7_vertex_070074C0, 15, 0),
     gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
     gsSP2Triangles( 3,  5,  6, 0x0,  7,  8,  9, 0x0),
     gsSP2Triangles( 7,  9, 10, 0x0, 11, 12, 13, 0x0),
@@ -1772,7 +1772,7 @@ static const Gfx bob_seg7_dl_070097F8[] = {
     gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
     gsSP2Triangles( 3,  6,  4, 0x0,  7,  8,  9, 0x0),
     gsSP2Triangles( 7,  9, 10, 0x0, 11, 12, 13, 0x0),
-    gsSP2Triangles(11, 14, 12, 0x0,  0,  2, 15, 0x0),
+    gsSP2Triangles(11, 14, 12, 0x0,  0,  2, 15, 0x0), */
     gsSPEndDisplayList(),
 };
 
@@ -1886,12 +1886,13 @@ const Gfx bob_seg7_dl_07009D80[] = {
     gsSPDisplayList(bob_seg7_dl_07008AF0),
     gsSPDisplayList(bob_seg7_dl_07008C28),
     gsSPDisplayList(bob_seg7_dl_07009050),
-    gsSPDisplayList(bob_seg7_dl_07009370),
     gsSPDisplayList(bob_seg7_dl_07009490),
     gsSPDisplayList(bob_seg7_dl_070095B8),
     gsSPDisplayList(bob_seg7_dl_07009768),
     gsSPDisplayList(bob_seg7_dl_070097F8),
     gsSPDisplayList(bob_seg7_dl_07009960),
+    gsDPSetTileSize(0, 0, 0, (128 - 1) << G_TEXTURE_IMAGE_FRAC, (128 - 1) << G_TEXTURE_IMAGE_FRAC),
+    gsSPDisplayList(bob_seg7_dl_07009370),
     gsDPTileSync(),
     gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 6, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
     gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (64 - 1) << G_TEXTURE_IMAGE_FRAC),

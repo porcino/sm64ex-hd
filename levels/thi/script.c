@@ -98,6 +98,7 @@ const LevelScript level_thi_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_THI_WARP_PIPE,       warp_pipe_geo),
     LOAD_MODEL_FROM_GEO(MODEL_THI_HUGE_ISLAND_TOP, thi_geo_0005B0),
     LOAD_MODEL_FROM_GEO(MODEL_THI_TINY_ISLAND_TOP, thi_geo_0005C8),
+    LOAD_MODEL_FROM_GEO(0xF2,                      purple_switch_base_geo),
 
     AREA(/*index*/ 1, thi_geo_000608),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -7372, -1969,  7373, /*angle*/ 0, 149, 0, /*behParam*/ 0x000A0000, /*beh*/ bhvSpinAirborneWarp),
@@ -124,6 +125,7 @@ const LevelScript level_thi_entry[] = {
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -2211,  110,  2212, /*angle*/ 0,  149, 0, /*behParam*/ 0x000A0000, /*beh*/ bhvSpinAirborneWarp),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/   280, -767, -4180, /*angle*/ 0,    0, 0, /*behParam*/ 0x000B0000, /*beh*/ bhvFadingWarp),
         OBJECT(/*model*/ MODEL_NONE, /*pos*/ -1638,    0, -1988, /*angle*/ 0, -126, 0, /*behParam*/ 0x000C0000, /*beh*/ bhvFadingWarp),
+        OBJECT(/*model*/ 0xF2,       /*pos*/ -1380, -758, -1770, /*angle*/ 0,    0, 0, /*behParam*/ 0x00000000, /*beh*/ bhvFlowers),
         WARP_NODE(/*id*/ 0x0A, /*destLevel*/ LEVEL_THI, /*destArea*/ 0x02, /*destNode*/ 0x0A, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0B, /*destLevel*/ LEVEL_THI, /*destArea*/ 0x02, /*destNode*/ 0x0C, /*flags*/ WARP_NO_CHECKPOINT),
         WARP_NODE(/*id*/ 0x0C, /*destLevel*/ LEVEL_THI, /*destArea*/ 0x02, /*destNode*/ 0x0B, /*flags*/ WARP_NO_CHECKPOINT),

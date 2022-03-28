@@ -1,44 +1,65 @@
-// 0x07066D88 - 0x07066E48
-static const Vtx inside_castle_seg7_vertex_07066D88[] = {
-    {{{  3731,  -2421,   -665}, 0, { -9300,  -2076}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  3731,  -2421,   -357}, 0, { -9300,   -542}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  3894,  -2297,   -511}, 0, { -8278,  -1310}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  4179,  -2079,   -511}, 0, { -6490,  -1310}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  4016,  -2204,   -665}, 0, { -7512,  -2076}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  4016,  -2204,   -357}, 0, { -7512,   -542}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  2011,  -2405,   -357}, 0, {   318,   -544}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  2011,  -2405,   -665}, 0, {   318,  -2076}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  1867,  -2261,   -511}, 0, {  -702,  -1310}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  1722,  -2116,   -357}, 0, { -1724,   -544}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  1722,  -2116,   -665}, 0, { -1724,  -2076}, {0xff, 0xff, 0x00, 0x80}}},
-    {{{  1577,  -1971,   -511}, 0, { -2746,  -1310}, {0xff, 0xff, 0x00, 0x80}}},
+Lights1 inside_castle_seg7_dl_07066E90_arrow_mat_lights = gdSPDefLights1(
+	0x6A, 0x6E, 0x55,
+	0xD5, 0xDC, 0xAA, 0x28, 0x28, 0x28);
+
+Gfx inside_castle_seg7_dl_07066E90_TapeCyellow_rgba16_aligner[] = {gsSPEndDisplayList()};
+u8 inside_castle_seg7_dl_07066E90_TapeCyellow_rgba16[] = {
+	#include "levels/castle_inside/TapeCyellow.rgba16.inc.c"
 };
 
-// 0x07066E48 - 0x07066E90
-static const Gfx inside_castle_seg7_dl_07066E48[] = {
-    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, inside_0900B000),
-    gsDPLoadSync(),
-    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
-    gsSPVertex(inside_castle_seg7_vertex_07066D88, 12, 0),
-    gsSP2Triangles( 0,  1,  2, 0x0,  3,  4,  5, 0x0),
-    gsSP2Triangles( 6,  7,  8, 0x0,  9, 10, 11, 0x0),
-    gsSPEndDisplayList(),
+Vtx inside_castle_seg7_dl_07066E90_sm64_mesh_mesh_vtx_0[12] = {
+	{{{3731, -2421, -665},0, {11868, -16},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{3731, -2421, -357},0, {11868, 17855},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{3894, -2297, -511},0, {-16, 8920},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{4179, -2079, -511},0, {14283, 17855},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{4016, -2204, -665},0, {14283, 32752},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{4016, -2204, -357},0, {-16, 22032},{0xB3, 0x65, 0x0, 0xFF}}},
+	{{{2011, -2405, -357},0, {14283, 10845},{0x5A, 0x5A, 0x0, 0xFF}}},
+	{{{2011, -2405, -665},0, {28538, 66},{0x5A, 0x5A, 0x0, 0xFF}}},
+	{{{1867, -2261, -511},0, {28538, 14881},{0x5A, 0x5A, 0x0, 0xFF}}},
+	{{{1722, -2116, -357},0, {26182, 14881},{0x5A, 0x5A, 0x0, 0xFF}}},
+	{{{1722, -2116, -665},0, {26182, 32752},{0x5A, 0x5A, 0x0, 0xFF}}},
+	{{{1577, -1971, -511},0, {14283, 23816},{0x5A, 0x5A, 0x0, 0xFF}}},
 };
 
-// 0x07066E90 - 0x07066F00
-const Gfx inside_castle_seg7_dl_07066E90[] = {
-    gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_MODULATERGB, G_CC_MODULATERGB),
-    gsSPClearGeometryMode(G_LIGHTING),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 0, 0, G_TX_LOADTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, G_TX_NOMASK, G_TX_NOLOD),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
-    gsDPTileSync(),
-    gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 8, 0, G_TX_RENDERTILE, 0, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD, G_TX_WRAP | G_TX_NOMIRROR, 5, G_TX_NOLOD),
-    gsDPSetTileSize(0, 0, 0, (32 - 1) << G_TEXTURE_IMAGE_FRAC, (32 - 1) << G_TEXTURE_IMAGE_FRAC),
-    gsSPDisplayList(inside_castle_seg7_dl_07066E48),
-    gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
-    gsDPPipeSync(),
-    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
-    gsSPSetGeometryMode(G_LIGHTING),
-    gsSPEndDisplayList(),
+Gfx inside_castle_seg7_dl_07066E90_sm64_mesh_mesh_tri_0[] = {
+	gsSPVertex(inside_castle_seg7_dl_07066E90_sm64_mesh_mesh_vtx_0 + 0, 12, 0),
+	gsSP1Triangle(0, 1, 2, 0),
+	gsSP1Triangle(3, 4, 5, 0),
+	gsSP1Triangle(6, 7, 8, 0),
+	gsSP1Triangle(9, 10, 11, 0),
+	gsSPEndDisplayList(),
 };
+
+
+Gfx mat_inside_castle_seg7_dl_07066E90_arrow_mat[] = {
+	gsDPPipeSync(),
+	gsDPSetCombineLERP(TEXEL0, 0, SHADE, 0, ENVIRONMENT, 0, 0, ENVIRONMENT, TEXEL0, 0, SHADE, 0, ENVIRONMENT, 0, 0, ENVIRONMENT),
+	gsSPTexture(65535, 65535, 0, 0, 1),
+	gsDPTileSync(),
+	gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1024, inside_castle_seg7_dl_07066E90_TapeCyellow_rgba16),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 256, 0, 7, 0, G_TX_WRAP | G_TX_NOMIRROR, 10, 0, G_TX_WRAP | G_TX_NOMIRROR, 10, 0),
+	gsDPLoadSync(),
+	gsDPLoadTile(7, 0, 0, 4092, 4092),
+	gsDPPipeSync(),
+	gsDPSetTile(G_IM_FMT_RGBA, G_IM_SIZ_16b, 256, 0, 0, 0, G_TX_WRAP | G_TX_NOMIRROR, 10, 0, G_TX_WRAP | G_TX_NOMIRROR, 10, 0),
+	gsDPSetTileSize(0, 0, 0, 4092, 4092),
+	gsDPSetEnvColor(187, 187, 187, 114),
+	gsSPSetLights1(inside_castle_seg7_dl_07066E90_arrow_mat_lights),
+	gsSPEndDisplayList(),
+};
+
+
+Gfx inside_castle_seg7_dl_07066E90[] = {
+	gsSPDisplayList(mat_inside_castle_seg7_dl_07066E90_arrow_mat),
+	gsSPDisplayList(inside_castle_seg7_dl_07066E90_sm64_mesh_mesh_tri_0),
+	gsDPPipeSync(),
+	gsSPSetGeometryMode(G_LIGHTING),
+	gsSPClearGeometryMode(G_TEXTURE_GEN),
+	gsDPSetCombineLERP(0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT, 0, 0, 0, SHADE, 0, 0, 0, ENVIRONMENT),
+	gsSPTexture(65535, 65535, 0, 0, 0),
+	gsSPEndDisplayList(),
+};
+
+
+

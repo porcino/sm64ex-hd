@@ -1,0 +1,38 @@
+extern const GeoLayout wiggler_head_geo[];
+extern Vtx wiggler_head_000_displaylist_mesh_vtx_0[218];
+extern Gfx wiggler_head_000_displaylist_mesh_tri_0[];
+extern Vtx wiggler_head_000_displaylist_002_mesh_vtx_0[667];
+extern Gfx wiggler_head_000_displaylist_002_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_004_mesh_vtx_0[24];
+extern Gfx wiggler_head_000_offset_004_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_005_mesh_vtx_0[8];
+extern Gfx wiggler_head_000_offset_005_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_005_mesh_vtx_1[13];
+extern Gfx wiggler_head_000_offset_005_mesh_tri_1[];
+extern Vtx wiggler_head_000_offset_005_skinned_vtx_0[8];
+extern Gfx wiggler_head_000_offset_005_skinned_tri_0[];
+extern Vtx wiggler_head_000_offset_006_mesh_vtx_0[134];
+extern Gfx wiggler_head_000_offset_006_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_007_mesh_vtx_0[24];
+extern Gfx wiggler_head_000_offset_007_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_008_mesh_vtx_0[8];
+extern Gfx wiggler_head_000_offset_008_mesh_tri_0[];
+extern Vtx wiggler_head_000_offset_008_mesh_vtx_1[13];
+extern Gfx wiggler_head_000_offset_008_mesh_tri_1[];
+extern Vtx wiggler_head_000_offset_008_skinned_vtx_0[8];
+extern Gfx wiggler_head_000_offset_008_skinned_tri_0[];
+extern Vtx wiggler_head_000_offset_009_mesh_vtx_0[135];
+extern Gfx wiggler_head_000_offset_009_mesh_tri_0[];
+
+extern Gfx wiggler_head_000_displaylist_mesh[];
+extern Gfx wiggler_head_000_displaylist_002_mesh[];
+extern Gfx wiggler_head_000_offset_004_mesh[];
+extern Gfx wiggler_head_000_offset_005_mesh[];
+extern Gfx wiggler_head_000_offset_005_skinned[];
+extern Gfx wiggler_head_000_offset_006_mesh[];
+extern Gfx wiggler_head_000_offset_007_mesh[];
+extern Gfx wiggler_head_000_offset_008_mesh[];
+extern Gfx wiggler_head_000_offset_008_skinned[];
+extern Gfx wiggler_head_000_offset_009_mesh[];
+extern Gfx wiggler_head_material_revert_render_settings[];
+

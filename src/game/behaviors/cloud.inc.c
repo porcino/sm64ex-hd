@@ -18,7 +18,7 @@ static s8 sCloudPartHeights[] = { 11, 8, 12, 8, 9, 9 };
  * Spawn the visual parts of the cloud, including fwoosh's face.
  */
 static void cloud_act_spawn_parts(void) {
-    struct Object *cloudPart;
+    /*struct Object *cloudPart;
     s32 i;
 
     // Spawn the pieces of the cloud itself
@@ -28,7 +28,7 @@ static void cloud_act_spawn_parts(void) {
         if (cloudPart != NULL) {
             obj_set_billboard(cloudPart);
         }
-    }
+    }*/
 
     if (o->oBehParams2ndByte == CLOUD_BP_FWOOSH) {
         // Spawn fwoosh's face

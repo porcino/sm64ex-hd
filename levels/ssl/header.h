@@ -85,4 +85,8 @@ extern const Gfx ssl_dl_pyramid_sand_pathway_side_end[];
 // script
 extern const LevelScript level_ssl_entry[];
 
+#include "grindel/geo_header.h"
+#include "spindel/geo_header.h"
+#include "actors/mummy/geo_header.h"
+
 #endif

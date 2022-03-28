@@ -367,7 +367,9 @@ enum MacroPresets {
     macro_empty_362,
     macro_empty_363,
     macro_empty_364,
-    macro_empty_365
+    macro_empty_365,
+    macro_mummy,
+    macro_flowers,
 };
 
 #endif // MACRO_PRESET_NAMES_H

@@ -1,0 +1,15 @@
+const GeoLayout flowers_geo[] = {
+	GEO_NODE_START(),
+	GEO_OPEN_NODE(),
+		GEO_RENDER_RANGE(-2048, 4000),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_OPAQUE, flowers_all_pack_01_mesh),
+			GEO_DISPLAY_LIST(LAYER_OPAQUE, flowers_material_revert_render_settings),
+		GEO_CLOSE_NODE(),
+		GEO_RENDER_RANGE(4000, 32767),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_OPAQUE, flowers_low_all_pack_01_mesh),
+		GEO_CLOSE_NODE(),
+	GEO_CLOSE_NODE(),
+	GEO_END(),
+};

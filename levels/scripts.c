@@ -36,6 +36,8 @@
 
 #include "level_table.h"
 
+#include "behavior_data.h"
+
 #define STUB_LEVEL(_0, _1, _2, _3, _4, _5, _6, _7, _8)
 #define DEFINE_LEVEL(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) + 3
 static const LevelScript script_exec_level_table[2
@@ -170,6 +172,8 @@ static const LevelScript script_exec_ ## folder [] = { \
 #undef DEFINE_LEVEL
 
 const LevelScript script_func_global_1[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_BLUE_COIN_SWITCH,        blue_coin_switch_geo),
     LOAD_MODEL_FROM_GEO(MODEL_AMP,                     amp_geo),
     LOAD_MODEL_FROM_GEO(MODEL_PURPLE_SWITCH,           purple_switch_geo),
@@ -193,10 +197,13 @@ const LevelScript script_func_global_1[] = {
     LOAD_MODEL_FROM_GEO(MODEL_FLYGUY,                  flyguy_geo),
     LOAD_MODEL_FROM_GEO(MODEL_CHUCKYA,                 chuckya_geo),
     LOAD_MODEL_FROM_GEO(MODEL_TRAJECTORY_MARKER_BALL,      bowling_ball_track_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_SPITTER,                 spitter_ball_geo),
     RETURN(),
 };
 
 const LevelScript script_func_global_2[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_BULLET_BILL,             bullet_bill_geo),
     LOAD_MODEL_FROM_GEO(MODEL_YELLOW_SPHERE,           yellow_sphere_geo),
     LOAD_MODEL_FROM_GEO(MODEL_HOOT,                    hoot_geo),
@@ -207,6 +214,8 @@ const LevelScript script_func_global_2[] = {
 };
 
 const LevelScript script_func_global_3[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_BLARGG,                  blargg_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BULLY,                   bully_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BULLY_BOSS,              bully_boss_geo),
@@ -221,6 +230,8 @@ const LevelScript script_func_global_4[] = {
 };
 
 const LevelScript script_func_global_5[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_MANTA_RAY,               manta_seg5_geo_05008D14),
     LOAD_MODEL_FROM_GEO(MODEL_UNAGI,                   unagi_geo),
     LOAD_MODEL_FROM_GEO(MODEL_SUSHI,                   sushi_geo),
@@ -291,6 +302,8 @@ const LevelScript script_func_global_12[] = {
 };
 
 const LevelScript script_func_global_13[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_BOWSER,                  bowser_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BOWSER_BOMB_CHILD_OBJ,   bowser_bomb_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BOWSER_BOMB,             bowser_bomb_geo),
@@ -326,6 +339,8 @@ const LevelScript script_func_global_15[] = {
 };
 
 const LevelScript script_func_global_16[] = {
+    LOAD_MODEL_FROM_GEO(MODEL_MARIO,                   mario_geo),
+    MARIO(/*model*/ MODEL_MARIO, /*behParam*/ 0x00000001, /*beh*/ bhvMario),
     LOAD_MODEL_FROM_GEO(MODEL_MIPS,                    mips_geo),
     LOAD_MODEL_FROM_GEO(MODEL_BOO_CASTLE,              boo_castle_geo),
     LOAD_MODEL_FROM_GEO(MODEL_LAKITU,                  lakitu_geo),
