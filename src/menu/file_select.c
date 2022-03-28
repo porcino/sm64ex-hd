@@ -28,6 +28,7 @@
 #define LANGUAGE_FUNCTION sLanguageMode
 #endif
 
+#include "game/splits.h"
 /**
  * @file file_select.c
  * This file implements how the file select and it's menus render and function.
@@ -1138,6 +1139,8 @@ void check_sound_mode_menu_clicked_buttons(struct Object *soundModeButton) {
  * retuning sSelectedFileNum to a save value defined in fileNum.
  */
 void load_main_menu_save_file(struct Object *fileButton, s32 fileNum) {
+    if (split_star == -1 && save_file_get_total_star_count(fileNum - 1, 0, 24) != 120)
+        split_press(-1);
     if (fileButton->oMenuButtonState == MENU_BUTTON_STATE_FULLSCREEN) {
         sSelectedFileNum = fileNum;
     }

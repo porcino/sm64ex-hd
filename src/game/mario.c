@@ -46,6 +46,7 @@ extern bool mouseCursor;
 
 u32 unused80339F10;
 s8 filler80339F1C[20];
+#include "splits.h"
 
 /**************************************************
  *                    ANIMATIONS                  *
@@ -1285,6 +1286,13 @@ void debug_print_speed_action_normal(struct MarioState *m) {
         // STA short for "status," the official action name via SMS map.
         print_text_fmt_int(210, 56, "STA %x", (m->action & ACT_ID_MASK));
     }
+    static bool split_final;
+    if (m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_THROW_CATCH_KEY || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_MISSING_CAP || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_TAKE_CAP_OFF_THEN_ON || m->action == ACT_JUMBO_STAR_CUTSCENE || m->action == ACT_JUMBO_STAR_CUTSCENE || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_THROW_CATCH_KEY) {
+        if (!split_final) {
+            split_final = true;
+            split_press(gMarioState->numStars);
+        }
+    } else if (split_final) split_final = false;
 }
 
 /**

@@ -35,6 +35,7 @@
 #include "pc/cliopts.h"
 #include "pc/configfile.h"
 #include "pc/controller/controller_keyboard.h"
+#include "splits.h"
 
 #define PLAY_MODE_NORMAL 0
 #define PLAY_MODE_PAUSED 2
@@ -458,6 +459,9 @@ void init_mario_after_warp(void) {
             play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gDefaultSoundArgs);
         }
 #endif
+    }
+    if ((gCurrLevelNum == 17 && splits[split_star] == 121) || (gCurrLevelNum == 23 && splits[split_star] == 122) || (gCurrLevelNum == 19 && splits[split_star] == 123) || (gCurrLevelNum == 21 && splits[split_star] == 124)) {
+        split_press(gMarioState->numStars);
     }
 }
 

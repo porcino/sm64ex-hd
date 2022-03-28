@@ -22,6 +22,7 @@
 #include "pc/configfile.h"
 #include "pc/controller/controller_api.h"
 #include "pc/controller/controller_keyboard.h"
+#include "splits.h"
 
 #include <stdbool.h>
 #include "../../include/libc/stdlib.h"
@@ -562,6 +563,7 @@ static void optmenu_act_leave(UNUSED struct Option *self, s32 arg) {
     if (!arg) optmenu_toggle();	
 	unpause_game();
 	fade_into_special_warp(-2, 0);
+    split_reset();
 }
 
 static void optvideo_reset_window(UNUSED struct Option *self, s32 arg) {
