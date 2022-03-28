@@ -59,6 +59,7 @@
 #define TEXT_OPT_HUD       _("HUD")
 #define TEXT_OPT_THREEPT   _("THREE POINT")
 #define TEXT_OPT_DRAWDIST  _("DRAW DISTANCE")
+#define TEXT_OPT_METAL_RATE _("METAL CAP UPDATE RATE")
 #define TEXT_OPT_APPLY     _("APPLY")
 #define TEXT_OPT_RESETWND  _("RESET WINDOW")
 
@@ -129,6 +130,7 @@
 #define TEXT_OPT_FRAMESKIP _("Frame Skip")
 #define TEXT_OPT_THREEPT   _("Three-point")
 #define TEXT_OPT_DRAWDIST  _("Draw Distance")
+#define TEXT_OPT_METAL_RATE _("Metal Cap Update Rate")
 #define TEXT_OPT_APPLY     _("Apply")
 #define TEXT_OPT_RESETWND  _("Reset Window")
 

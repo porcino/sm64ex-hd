@@ -98,6 +98,7 @@ unsigned int configSpeed         = 2;
 #ifndef NODRAWINGDISTANCE
 unsigned int configDrawDistance  = 200;
 #endif
+unsigned int configMetalRate     = 10;
 #ifdef DISCORDRPC
 bool         configDiscordRPC    = true;
 #endif
@@ -114,6 +115,7 @@ static const struct ConfigOption options[] = {
     #ifndef NODRAWINGDISTANCE
     {.name = "drawing_distance",     .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     #endif
+    {.name = "metal_rate",           .type = CONFIG_TYPE_UINT, .uintValue = &configMetalRate},
     {.name = "master_volume",        .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",         .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",           .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},

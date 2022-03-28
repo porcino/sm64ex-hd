@@ -91,6 +91,7 @@ static const u8 optsVideoStr[][32] = {
     { TEXT_OPT_HUD },
     { TEXT_OPT_THREEPT },
     { TEXT_OPT_DRAWDIST },
+    { TEXT_OPT_METAL_RATE },
     { TEXT_OPT_APPLY },
 };
 
@@ -630,8 +631,9 @@ static struct Option optsVideo[] = {
 #ifndef NODRAWINGDISTANCE
     DEF_OPT_SCROLL( optsVideoStr[11], &configDrawDistance, 50, 509, 10 ),
 #endif
+    DEF_OPT_SCROLL( optsVideoStr[12], &configMetalRate, 2, 31, 2 ),
     DEF_OPT_BUTTON( optsVideoStr[4], optvideo_reset_window ),
-    DEF_OPT_BUTTON( optsVideoStr[12], optvideo_apply ),
+    DEF_OPT_BUTTON( optsVideoStr[13], optvideo_apply ),
 };
 
 static struct Option optsAudio[] = {

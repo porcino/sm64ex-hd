@@ -63,6 +63,7 @@ extern bool         configHUD;
 #ifndef NODRAWINGDISTANCE
 extern unsigned int configDrawDistance;
 #endif
+extern unsigned int configMetalRate;
 extern bool         configSkipIntro;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;

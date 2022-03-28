@@ -778,9 +778,11 @@ index d520876..e468e25 100644
 -    DEF_OPT_SCROLL( optsVideoStr[11], &configDrawDistance, 50, 509, 10 ),
 +    DEF_OPT_SCROLL( optsVideoStr[12], &configDrawDistance, 50, 509, 10 ),
  #endif
+-    DEF_OPT_SCROLL( optsVideoStr[12], &configMetalRate, 2, 31, 2 ),
++    DEF_OPT_SCROLL( optsVideoStr[13], &configMetalRate, 2, 31, 2 ),
      DEF_OPT_BUTTON( optsVideoStr[4], optvideo_reset_window ),
--    DEF_OPT_BUTTON( optsVideoStr[12], optvideo_apply ),
-+    DEF_OPT_BUTTON( optsVideoStr[13], optvideo_apply ),
+-    DEF_OPT_BUTTON( optsVideoStr[13], optvideo_apply ),
++    DEF_OPT_BUTTON( optsVideoStr[14], optvideo_apply ),
  };
  
  static struct Option optsAudio[] = {

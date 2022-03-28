@@ -187,6 +187,13 @@ static size_t buf_vbo_num_tris;
 static struct GfxWindowManagerAPI *gfx_wapi;
 static struct GfxRenderingAPI *gfx_rapi;
 
+static char texture_metal[35] = "actors/mario/mario_metal.rgba16";
+static unsigned char* metal_data;
+static unsigned char* metal_original;
+static int metal_saved = -1;
+static int metal_w, metal_h;
+static int metal_ow, metal_oh;
+static bool metal_can_add = true;
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -695,8 +702,85 @@ static void import_texture(int tile) {
         return;
     }
 
+    char texture_name[120];
+    strcpy(texture_name, (const char*)rdp.loaded_texture[tile].addr);
     if (gfx_texture_cache_lookup(tile, &rendering_state.textures[tile], rdp.loaded_texture[tile].addr, fmt, siz)) {
+#ifdef EXTERNAL_DATA
+        if (strcmp(texture_name, texture_metal) == 0) {
+            if (metal_saved > 1) {
+                if (metal_saved == 2) {
+				
+                    //Blend the image captured from the last rendered frame and the mario_metal.rgba16.png texture together,
+                    //resizing it to the smaller width and height with a nearest algorithm and making the alpha weaker to the center so we don't see mario.
+                    int w_min = metal_w < metal_ow ? metal_w : metal_ow;
+                    int h_min = metal_h < metal_oh ? metal_h : metal_oh;
+                    unsigned char* blended;
+                    blended = malloc (sizeof (unsigned char) * (4 * w_min * h_min));
+                    int i_o = 0, i_d = 0;
+                    for (int i = 0; i < h_min; ++i) {
+                        int j_o = 0, j_d = 0;
+                        for (int j = 0; j < w_min; ++j) {
+                            int r = 4 * j + w_min * i * 4;
+                            int g = r + 1;
+                            int b = r + 2;
+                            int r_o = 4 * j_o + metal_ow * i_o * 4;
+                            int g_o = r_o + 1;
+                            int b_o = r_o + 2;
+                            int r_d = 4 * j_d + metal_w * i_d * 4;
+                            int g_d = r_d + 1;
+                            int b_d = r_d + 2;
+                            float to_center = 2.f * sqrt(fabs((float)((w_min / 2.f - j) / (w_min / 2.f))));
+                            to_center += 2.f * sqrt(fabs((float)((h_min / 2.f - j) / (h_min / 2.f))));
+                            blended[r] = (metal_data[r_d] * to_center + metal_original[r_o] * (4.f - to_center)) / 4.f;
+                            blended[g] = (metal_data[g_d] * to_center + metal_original[g_o] * (4.f - to_center)) / 4.f;
+                            blended[b] = (metal_data[b_d] * to_center + metal_original[b_o] * (4.f - to_center)) / 4.f;
+                            blended[r + 4] = 255;
+                            j_o += floor((metal_ow - j_o) / (w_min - j));
+                            j_d += floor((metal_w - j_d) / (w_min - j));
+                        }
+                        i_o += floor((metal_oh - i_o) / (h_min - i));
+                        i_d += floor((metal_h - i_d) / (h_min - i));
+                    }
+                    
+                    gfx_rapi->upload_texture(blended, w_min, h_min);
+                    free(blended);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                }
+                if (metal_saved >= ceil(60 / configMetalRate))
+                    metal_saved = 1;
+                else if (metal_can_add) {
+                    metal_can_add = false;
+                    metal_saved++;
+                }
+                return;
+            } else {
+                metal_saved = 1;
+                return;
+            }
+        } else {
+            return;
+        }
+#else
         return;
+#endif
+#ifdef EXTERNAL_DATA
+    } else if (strcmp(texture_name, texture_metal) == 0) {
+        if (metal_saved == -1) {
+            char tex_original[SYS_MAX_PATH];
+            snprintf(tex_original, sizeof(tex_original), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
+            int c;
+            stbi_info(tex_original, &metal_ow, &metal_oh, &c);
+            u64 imgsize = 0;
+            u8 *imgdata = fs_load_file(tex_original, &imgsize);
+            imgdata = fs_load_file(tex_original, &imgsize);
+            if (imgdata) {
+                metal_original = stbi_load_from_memory(imgdata, imgsize, &metal_ow, &metal_oh, NULL, 4);
+                free(imgdata);
+            }
+        }
+        metal_saved = 1;
+        return;
+#endif
     }
 
 #ifdef EXTERNAL_DATA
@@ -1914,6 +1998,20 @@ void gfx_run(Gfx *commands) {
     double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
+#ifdef EXTERNAL_DATA
+    metal_can_add = true;
+    if (metal_saved == 1) {
+        metal_saved = 2;
+        metal_w = gfx_current_dimensions.width;
+        metal_h = gfx_current_dimensions.height * 2 / 3;
+        if (!metal_data)
+            metal_data = malloc (sizeof (unsigned char) * (4 * metal_w * metal_h));
+        else
+            metal_data = realloc(metal_data, sizeof (unsigned char) * (4 * metal_w * metal_h));
+        glReadPixels(0, gfx_current_dimensions.height / 10, metal_w, metal_h, GL_RGBA, GL_UNSIGNED_BYTE, metal_data);
+    } else if (metal_saved == 2)
+        metal_saved = 0;
+#endif
     gfx_flush();
     double t1 = gfx_wapi->get_time();
     //printf("Process %f %f\n", t1, t1 - t0);
