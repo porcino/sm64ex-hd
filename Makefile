@@ -38,17 +38,17 @@ TARGET_ARCH ?= native
 TARGET_BITS ?= 0
 
 # Disable better camera by default
-BETTERCAMERA ?= 0
+BETTERCAMERA ?= 1
 # Disable no drawing distance by default
 NODRAWINGDISTANCE ?= 0
 # Disable texture fixes by default (helps with them purists)
-TEXTURE_FIX ?= 0
+TEXTURE_FIX ?= 1
 # Enable extended options menu by default
 EXT_OPTIONS_MENU ?= 1
 # Disable text-based save-files by default
 TEXTSAVES ?= 0
 # Load resources from external files
-EXTERNAL_DATA ?= 0
+EXTERNAL_DATA ?= 1
 # Enable Discord Rich Presence
 DISCORDRPC ?= 0
 
@@ -716,6 +716,7 @@ res: $(BASEPACK_PATH)
 
 # prepares the basepack.lst
 $(BASEPACK_LST): $(EXE)
+	@wget -O $(BUILD_DIR)/$(BASEDIR)/textures.zip 'https://onedrive.live.com/download?cid=AAE90FF56FF2B195&resid=AAE90FF56FF2B195%21128&authkey=AF8cMUuHjKt5rvk'
 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
 	@echo -n > $(BASEPACK_LST)
 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
