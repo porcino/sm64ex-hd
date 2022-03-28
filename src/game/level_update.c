@@ -34,6 +34,7 @@
 #include "pc/pc_main.h"
 #include "pc/cliopts.h"
 #include "pc/configfile.h"
+#include "pc/controller/controller_keyboard.h"
 
 #define PLAY_MODE_NORMAL 0
 #define PLAY_MODE_PAUSED 2
@@ -210,7 +211,7 @@ u32 pressed_pause(void) {
     u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
 
     if (!intangible && !val4 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
-        && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+        && (gPlayer1Controller->buttonPressed & START_BUTTON || pressed_esc == 1)) {
         return TRUE;
     }
 
