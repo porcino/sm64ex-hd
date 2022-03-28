@@ -37,6 +37,10 @@
 #include "pc/cheats.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
+extern u8 newcam_active;
+extern u16 newcam_distance;
+extern u16 newcam_distance_target;
+extern struct CameraFOVStatus sFOVState;
 #endif
 
 u32 unused80339F10;
@@ -1255,6 +1259,15 @@ void squish_mario_model(struct MarioState *m) {
  * Debug function that prints floor normal, velocity, and action information.
  */
 void debug_print_speed_action_normal(struct MarioState *m) {
+#ifdef BETTERCAMERA
+    if ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE && newcam_active) {
+        u8 fieldov = m->forwardVel > 0.f ? m->forwardVel / 4.f : 0.f;
+        s16 zoom_speed = newcam_distance_target - ((m->forwardVel > 0.f ? m->forwardVel : 0.f) * 10.f);
+        fieldov = 45.f + (fieldov < 30.f ? fieldov : 30.f);
+        camera_approach_f32_symmetric_bool(&sFOVState.fov, fieldov, (fieldov - sFOVState.fov) / 10.f);
+        newcam_distance = zoom_speed > 200 ? zoom_speed : 200;
+    }
+#endif
     f32 steepness;
     f32 floor_nY;
 

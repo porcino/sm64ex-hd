@@ -11509,7 +11509,7 @@ Gfx *geo_camera_fov(s32 callContext, struct GraphNode *g, UNUSED void *context) 
                 zoom_fov_30(marioState);
                 break;
             case CAM_FOV_DEFAULT:
-                fov_default(marioState);
+                //fov_default(marioState);
                 break;
             case CAM_FOV_BBH:
                 set_fov_bbh(marioState);

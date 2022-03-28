@@ -27,6 +27,8 @@
 #include "../platform.h"
 #include "../configfile.h"
 #include "../fs/fs.h"
+#include "game/area.h"
+#include "game/object_list_processor.h"
 
 #define SUPPORT_CHECK(x) assert(x)
 
@@ -863,6 +865,17 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     struct LoadedVertex *v_arr[3] = {v1, v2, v3};
     
     //if (rand()%2) return;
+    float alphadis = 1.f;
+    if (gNumStaticSurfaces > 10) {
+        double distance1 = sqrt(((v1->x - 0) * (v1->x - 0)) + ((v1->y - 0) * (v1->y - 0)) + ((v1->z - 0) * (v1->z - 0))) / 85;
+        double distance2 = sqrt(((v2->x - 0) * (v2->x - 0)) + ((v2->y - 0) * (v2->y - 0)) + ((v2->z - 0) * (v2->z - 0))) / 85;
+        double distance3 = sqrt(((v3->x - 0) * (v3->x - 0)) + ((v3->y - 0) * (v3->y - 0)) + ((v3->z - 0) * (v3->z - 0))) / 85;
+        double closestdis = distance1 < distance2 ? distance1 : distance2;
+        closestdis = closestdis < distance3 ? closestdis : distance3;
+        if (gCurrLevelNum > 1 && closestdis > configDrawDistance) return;
+        float alphastart = configDrawDistance / 1.14;
+        alphadis = closestdis > alphastart ? 1.f - (closestdis - alphastart) / (configDrawDistance - alphastart) : 1.f;
+    }
     
     if (v1->clip_rej & v2->clip_rej & v3->clip_rej) {
         // The whole triangle lies outside the visible area
@@ -932,7 +945,8 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     
     uint32_t cc_id = rdp.combine_mode;
     
-    bool use_alpha = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
+    //bool use_alpha = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
+    bool use_alpha = alphadis == 1.f ? (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0 : 1;
     bool use_fog = (rdp.other_mode_l >> 30) == G_BL_CLR_FOG;
     bool texture_edge = (rdp.other_mode_l & CVG_X_ALPHA) == CVG_X_ALPHA;
     bool use_noise = (rdp.other_mode_l & G_AC_DITHER) == G_AC_DITHER;
@@ -1055,9 +1069,9 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
                 } else {
                     if (use_fog && color == &v_arr[i]->color) {
                         // Shade alpha is 100% for fog
-                        buf_vbo[buf_vbo_len++] = 1.0f;
+                        buf_vbo[buf_vbo_len++] = 1.0f * alphadis;
                     } else {
-                        buf_vbo[buf_vbo_len++] = color->a / 255.0f;
+                        buf_vbo[buf_vbo_len++] = color->a / 255.0f * alphadis;
                     }
                 }
             }
