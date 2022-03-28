@@ -23,6 +23,7 @@
 #include <PR/gbi.h>
 
 #include "config.h"
+#include "gfx_colors.h"
 
 #include "gfx_pc.h"
 #include "gfx_cc.h"
@@ -844,6 +845,7 @@ static float gfx_adjust_x_for_aspect_ratio(float x) {
 }
 
 static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *vertices) {
+    float *colorfx = color_fx();
     for (size_t i = 0; i < n_vertices; i++, dest_index++) {
         const Vtx_t *v = &vertices[i].v;
         const Vtx_tn *vn = &vertices[i].n;
@@ -888,6 +890,9 @@ static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *verti
                 }
             }
             
+            r *= colorfx[0];
+            g *= colorfx[1];
+            b *= colorfx[2];
             d->color.r = r > 255 ? 255 : r;
             d->color.g = g > 255 ? 255 : g;
             d->color.b = b > 255 ? 255 : b;
@@ -905,9 +910,9 @@ static void gfx_sp_vertex(size_t n_vertices, size_t dest_index, const Vtx *verti
                 V = (int32_t)((doty / 127.0f + 1.0f) / 4.0f * rsp.texture_scaling_factor.t);
             }
         } else {
-            d->color.r = v->cn[0];
-            d->color.g = v->cn[1];
-            d->color.b = v->cn[2];
+            d->color.r = v->cn[0] * colorfx[3];
+            d->color.g = v->cn[1] * colorfx[4];
+            d->color.b = v->cn[2] * colorfx[5];
         }
         
         d->u = U;
@@ -1127,9 +1132,10 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
         }
         
         if (use_fog) {
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.r / 255.0f;
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.g / 255.0f;
-            buf_vbo[buf_vbo_len++] = rdp.fog_color.b / 255.0f;
+            float *colorfx = color_fx();
+            buf_vbo[buf_vbo_len++] = rdp.fog_color.r / 255.0f * colorfx[0];
+            buf_vbo[buf_vbo_len++] = rdp.fog_color.g / 255.0f * colorfx[1];
+            buf_vbo[buf_vbo_len++] = rdp.fog_color.b / 255.0f * colorfx[2];
             buf_vbo[buf_vbo_len++] = v_arr[i]->color.a / 255.0f; // fog factor (not alpha)
         }
         
