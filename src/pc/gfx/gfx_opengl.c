@@ -648,6 +648,10 @@ static void gfx_opengl_on_resize(void) {
 
 static void gfx_opengl_start_frame(void) {
     frame_count++;
+    if (configAntiAliasing)
+        glEnable(GL_MULTISAMPLE_ARB);
+    else
+        glDisable(GL_MULTISAMPLE_ARB);
 
     glDisable(GL_SCISSOR_TEST);
     glDepthMask(GL_TRUE); // Must be set to clear Z-buffer

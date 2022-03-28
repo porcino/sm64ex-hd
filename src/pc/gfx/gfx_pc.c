@@ -758,7 +758,7 @@ static void import_texture(int tile) {
                 return;
             }
         } else {
-            return;
+            if (!configWindow.aa_changed) return;
         }
 #else
         return;
@@ -2017,6 +2017,7 @@ void gfx_run(Gfx *commands) {
     //printf("Process %f %f\n", t1, t1 - t0);
     gfx_rapi->end_frame();
     gfx_wapi->swap_buffers_begin();
+    if (configWindow.aa_changed) configWindow.aa_changed = false;
 }
 
 void gfx_end_frame(void) {
