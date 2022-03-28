@@ -91,6 +91,7 @@ bool         configCameraAnalog  = false;
 bool         configCameraMouse   = true;
 #endif
 bool         configSkipIntro     = 0;
+bool         configInputDisplay  = false;
 bool         configFrameskip     = true;
 bool         configHUD           = true;
 unsigned int configSpeed         = 2;
@@ -152,6 +153,7 @@ static const struct ConfigOption options[] = {
     {.name = "bettercam_degrade",    .type = CONFIG_TYPE_UINT, .uintValue = &configCameraDegrade},
     #endif
     {.name = "skip_intro",           .type = CONFIG_TYPE_BOOL, .boolValue = &configSkipIntro},
+    {.name = "input_display",        .type = CONFIG_TYPE_BOOL, .boolValue = &configInputDisplay},
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif 

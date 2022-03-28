@@ -57,6 +57,7 @@ extern bool         configEnableCamera;
 extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
 #endif
+extern bool         configInputDisplay;
 extern bool         configFrameskip;
 extern bool         configHUD;
 #ifndef NODRAWINGDISTANCE

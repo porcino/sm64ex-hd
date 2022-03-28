@@ -3,9 +3,9 @@ index 36ae285..37fcfae 100644
 --- a/include/text_options_strings.h.in
 +++ b/include/text_options_strings.h.in
 @@ -54,6 +54,7 @@
- #define TEXT_OPT_ENVVOLUME _("ENV VOLUME")
  #define TEXT_OPT_VSYNC     _("VERTICAL SYNC")
  #define TEXT_OPT_AUTO      _("AUTO")
+ #define TEXT_OPT_INPUTDISPLAY _("INPUT DISPLAY")
 +#define TEXT_OPT_60FPS     _("60 FPS")
  #define TEXT_OPT_FRAMESKIP _("FRAMESKIP")
  #define TEXT_OPT_HUD       _("HUD")
@@ -13,11 +13,11 @@ index 36ae285..37fcfae 100644
 @@ -122,6 +123,7 @@
  #define TEXT_OPT_VSYNC     _("Vertical Sync")
  #define TEXT_OPT_AUTO      _("Auto")
- #define TEXT_OPT_HUD       _("HUD")
+ #define TEXT_OPT_INPUTDISPLAY _("Input Display")
 +#define TEXT_OPT_60FPS     _("60 fps")
+ #define TEXT_OPT_HUD       _("HUD")
  #define TEXT_OPT_FRAMESKIP _("Frame Skip")
  #define TEXT_OPT_THREEPT   _("Three-point")
- #define TEXT_OPT_DRAWDIST  _("Draw Distance")
 diff --git a/include/types.h b/include/types.h
 index b3dc27e..c46bdf0 100644
 --- a/include/types.h
@@ -749,9 +749,9 @@ index d520876..e468e25 100644
 --- a/src/game/options_menu.c
 +++ b/src/game/options_menu.c
 @@ -84,6 +84,7 @@ static const u8 optsVideoStr[][32] = {
-     { TEXT_OPT_RESETWND },
      { TEXT_OPT_VSYNC },
      { TEXT_OPT_AUTO },
+     { TEXT_OPT_INPUTDISPLAY },
 +    { TEXT_OPT_60FPS },
      { TEXT_OPT_FRAMESKIP },
      { TEXT_OPT_HUD },
@@ -760,27 +760,27 @@ index d520876..e468e25 100644
  static const u8 *filterChoices[] = {
      optsVideoStr[2],
      optsVideoStr[3],
--    optsVideoStr[9],
-+    optsVideoStr[10],
+-    optsVideoStr[10],
++    optsVideoStr[11],
  };
  
  static const u8 *vsyncChoices[] = {
 @@ -619,13 +620,14 @@ static struct Option optsVideo[] = {
-     DEF_OPT_TOGGLE( optsVideoStr[0], &configWindow.fullscreen ),
      DEF_OPT_TOGGLE( optsVideoStr[5], &configWindow.vsync ),
      DEF_OPT_CHOICE( optsVideoStr[1], &configFiltering, filterChoices ),
--    DEF_OPT_TOGGLE( optsVideoStr[7], &configFrameskip ),
--    DEF_OPT_TOGGLE( optsVideoStr[8], &configHUD ),
-+    DEF_OPT_TOGGLE( optsVideoStr[7], &config60fps ),
-+    DEF_OPT_TOGGLE( optsVideoStr[8], &configFrameskip ),
-+    DEF_OPT_TOGGLE( optsVideoStr[9], &configHUD ),
+     DEF_OPT_TOGGLE( optsVideoStr[7], &configInputDisplay ),
+-    DEF_OPT_TOGGLE( optsVideoStr[8], &configFrameskip ),
+-    DEF_OPT_TOGGLE( optsVideoStr[9], &configHUD ),
++    DEF_OPT_TOGGLE( optsVideoStr[8], &config60fps ),
++    DEF_OPT_TOGGLE( optsVideoStr[9], &configFrameskip ),
++    DEF_OPT_TOGGLE( optsVideoStr[10], &configHUD ),
  #ifndef NODRAWINGDISTANCE
--    DEF_OPT_SCROLL( optsVideoStr[10], &configDrawDistance, 50, 509, 10 ),
-+    DEF_OPT_SCROLL( optsVideoStr[11], &configDrawDistance, 50, 509, 10 ),
+-    DEF_OPT_SCROLL( optsVideoStr[11], &configDrawDistance, 50, 509, 10 ),
++    DEF_OPT_SCROLL( optsVideoStr[12], &configDrawDistance, 50, 509, 10 ),
  #endif
      DEF_OPT_BUTTON( optsVideoStr[4], optvideo_reset_window ),
--    DEF_OPT_BUTTON( optsVideoStr[11], optvideo_apply ),
-+    DEF_OPT_BUTTON( optsVideoStr[12], optvideo_apply ),
+-    DEF_OPT_BUTTON( optsVideoStr[12], optvideo_apply ),
++    DEF_OPT_BUTTON( optsVideoStr[13], optvideo_apply ),
  };
  
  static struct Option optsAudio[] = {
@@ -1887,9 +1887,9 @@ index 12548e8..e3b1fbe 100644
 --- a/src/pc/configfile.c
 +++ b/src/pc/configfile.c
 @@ -91,6 +91,7 @@ bool         configCameraAnalog  = false;
- bool         configCameraMouse   = true;
  #endif
  bool         configSkipIntro     = 0;
+ bool         configInputDisplay  = false;
 +bool         config60fps         = true;
  bool         configFrameskip     = true;
  bool         configHUD           = true;
@@ -1907,9 +1907,9 @@ index 51fa5b6..442e327 100644
 --- a/src/pc/configfile.h
 +++ b/src/pc/configfile.h
 @@ -57,6 +57,7 @@ extern bool         configEnableCamera;
- extern bool         configCameraMouse;
  extern bool         configCameraAnalog;
  #endif
+ extern bool         configInputDisplay;
 +extern bool         config60fps;
  extern bool         configFrameskip;
  extern bool         configHUD;

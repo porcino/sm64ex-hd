@@ -86,6 +86,7 @@ static const u8 optsVideoStr[][32] = {
     { TEXT_OPT_RESETWND },
     { TEXT_OPT_VSYNC },
     { TEXT_OPT_AUTO },
+    { TEXT_OPT_INPUTDISPLAY },
     { TEXT_OPT_FRAMESKIP },
     { TEXT_OPT_HUD },
     { TEXT_OPT_THREEPT },
@@ -484,7 +485,7 @@ static const u8 bindKeyNames[][32] = {
 static const u8 *filterChoices[] = {
     optsVideoStr[2],
     optsVideoStr[3],
-    optsVideoStr[9],
+    optsVideoStr[10],
 };
 
 static const u8 *vsyncChoices[] = {
@@ -623,13 +624,14 @@ static struct Option optsVideo[] = {
     DEF_OPT_TOGGLE( optsVideoStr[0], &configWindow.fullscreen ),
     DEF_OPT_TOGGLE( optsVideoStr[5], &configWindow.vsync ),
     DEF_OPT_CHOICE( optsVideoStr[1], &configFiltering, filterChoices ),
-    DEF_OPT_TOGGLE( optsVideoStr[7], &configFrameskip ),
-    DEF_OPT_TOGGLE( optsVideoStr[8], &configHUD ),
+    DEF_OPT_TOGGLE( optsVideoStr[7], &configInputDisplay ),
+    DEF_OPT_TOGGLE( optsVideoStr[8], &configFrameskip ),
+    DEF_OPT_TOGGLE( optsVideoStr[9], &configHUD ),
 #ifndef NODRAWINGDISTANCE
-    DEF_OPT_SCROLL( optsVideoStr[10], &configDrawDistance, 50, 509, 10 ),
+    DEF_OPT_SCROLL( optsVideoStr[11], &configDrawDistance, 50, 509, 10 ),
 #endif
     DEF_OPT_BUTTON( optsVideoStr[4], optvideo_reset_window ),
-    DEF_OPT_BUTTON( optsVideoStr[11], optvideo_apply ),
+    DEF_OPT_BUTTON( optsVideoStr[12], optvideo_apply ),
 };
 
 static struct Option optsAudio[] = {
