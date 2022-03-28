@@ -43,7 +43,7 @@ ConfigWindow configWindow       = {
     .y = WAPI_WIN_CENTERPOS,
     .w = DESIRED_SCREEN_WIDTH,
     .h = DESIRED_SCREEN_HEIGHT,
-    .vsync = 1,
+    .vsync = false,
     .reset = false,
     .fullscreen = false,
     .exiting_fullscreen = false,
@@ -91,6 +91,7 @@ bool         configCameraAnalog  = false;
 bool         configCameraMouse   = true;
 #endif
 bool         configSkipIntro     = 0;
+bool         configFrameskip     = true;
 bool         configHUD           = true;
 unsigned int configSpeed         = 2;
 #ifndef NODRAWINGDISTANCE
@@ -108,6 +109,7 @@ static const struct ConfigOption options[] = {
     {.name = "window_h",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
     {.name = "vsync",                .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
     {.name = "texture_filtering",    .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
+    {.name = "frameskip",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFrameskip},
     #ifndef NODRAWINGDISTANCE
     {.name = "drawing_distance",     .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     #endif

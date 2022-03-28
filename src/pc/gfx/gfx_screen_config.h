@@ -5,3 +5,4 @@
 #define DESIRED_SCREEN_HEIGHT 720
 
 #endif
+extern int frame_skip;

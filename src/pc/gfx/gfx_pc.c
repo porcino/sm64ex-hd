@@ -5,6 +5,12 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#ifdef __MINGW32__
+#define GLEW_STATIC
+#include <GL/glew.h>
+#else
+#include <SDL2/SDL_opengl.h>
+#endif
 
 #ifdef EXTERNAL_DATA
 #define STB_IMAGE_IMPLEMENTATION
@@ -62,6 +68,8 @@
 
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
 #define HASH_MASK (HASHMAP_LEN - 1)
+
+extern int frame_skip;
 
 struct RGBA {
     uint8_t r, g, b, a;
@@ -509,6 +517,83 @@ static void import_texture_ci8(int tile) {
 
 #else // EXTERNAL_DATA
 
+static inline bool load_DDS(const char *path) {
+	unsigned char* header;
+	unsigned int width;
+	unsigned int height;
+	unsigned int mipMapCount;
+	unsigned int blockSize;
+	unsigned int format;
+	unsigned int w;
+	unsigned int h;
+	unsigned char* buffer = 0;
+	bool found = false;
+
+	u64 file_size = 0;
+	unsigned char* imgdata = fs_load_file(path, &file_size);
+
+	header = malloc(128);
+	if (!imgdata) return found;
+	memcpy(header, imgdata, 128);
+
+	if(memcmp(header, "DDS ", 4) != 0)
+		goto exit;
+	
+	height = (header[12]) | (header[13] << 8) | (header[14] << 16) | (header[15] << 24);
+	width = (header[16]) | (header[17] << 8) | (header[18] << 16) | (header[19] << 24);
+	mipMapCount = (header[28]) | (header[29] << 8) | (header[30] << 16) | (header[31] << 24);
+	
+	if(header[84] == 'D') {
+		switch(header[87]) {
+			case '1': // DXT1
+				format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+				blockSize = 8;
+				break;
+			case '3': // DXT3
+				format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+				blockSize = 16;
+				break;
+			case '5': // DXT5
+				format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+				blockSize = 16;
+				break;
+			case '0': // DX10
+			default: goto exit;
+		}
+	} else
+		goto exit;
+
+	buffer = malloc(file_size);
+	if(buffer == 0)
+		goto exit;
+	memcpy(buffer, &imgdata[128], file_size);
+
+	unsigned int offset = 0;
+	unsigned int size = 0;
+	w = width;
+	h = height;
+
+	for (unsigned int i=0; i<mipMapCount; i++) {
+		if(w == 0 || h == 0) {
+			mipMapCount--;
+			continue;
+		}
+		size = ((w+3)/4) * ((h+3)/4) * blockSize;
+		glCompressedTexImage2D(GL_TEXTURE_2D, i, format, w, h, 0, size, buffer + offset);
+		offset += size;
+		w /= 2;
+		h /= 2;
+	}
+	found = true;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, configFiltering == 0 ? 0 : mipMapCount-1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, configFiltering == 0 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR_MIPMAP_LINEAR);
+exit:
+	free(buffer);
+	free(header);
+	free(imgdata);
+	return found;
+}
+
 static inline void load_texture(const char *fullpath) {
     int w, h;
     u64 imgsize = 0;
@@ -617,8 +702,13 @@ static void import_texture(int tile) {
     // the "texture data" is actually a C string with the path to our texture in it
     // load it from an external image in our data path
     char texname[SYS_MAX_PATH];
-    snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
-    load_texture(texname);
+    snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.dds", (const char*)rdp.loaded_texture[tile].addr);
+    bool found_dds = load_DDS(texname);
+    if (!found_dds) {
+        snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
+        load_texture(texname);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
 #else
     // the texture data is actual texture data
     int t0 = get_time();
@@ -950,6 +1040,15 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     bool use_fog = (rdp.other_mode_l >> 30) == G_BL_CLR_FOG;
     bool texture_edge = (rdp.other_mode_l & CVG_X_ALPHA) == CVG_X_ALPHA;
     bool use_noise = (rdp.other_mode_l & G_AC_DITHER) == G_AC_DITHER;
+    bool use_coverage = (rdp.other_mode_l & G_AC_COVERAGE) == G_AC_COVERAGE;
+    
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    glDisable(GL_SAMPLE_ALPHA_TO_ONE);
+    if (use_coverage) {
+        glDepthMask(GL_TRUE);
+        glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+        glEnable(GL_SAMPLE_ALPHA_TO_ONE);
+    }
     
     if (texture_edge) {
         use_alpha = true;
@@ -1799,7 +1898,8 @@ void gfx_run(Gfx *commands) {
     
     //puts("New frame");
     
-    if (!gfx_wapi->start_frame()) {
+    if (!gfx_wapi->start_frame() || frame_skip == 2) {
+        frame_skip = 1;
         dropped_frame = true;
         return;
     }
