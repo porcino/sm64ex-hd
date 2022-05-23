@@ -187,6 +187,7 @@ static size_t buf_vbo_num_tris;
 static struct GfxWindowManagerAPI *gfx_wapi;
 static struct GfxRenderingAPI *gfx_rapi;
 
+#ifdef EXTERNAL_DATA				
 static char texture_metal[35] = "actors/mario/mario_metal.rgba16";
 static unsigned char* metal_data;
 static unsigned char* metal_original;
@@ -194,6 +195,7 @@ static int metal_saved = -1;
 static int metal_w, metal_h;
 static int metal_ow, metal_oh;
 static bool metal_can_add = true;
+#endif 
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -701,9 +703,10 @@ static void import_texture(int tile) {
                 tile, (int)fmt, (int)siz, (int)rdp.loaded_texture[tile].size_bytes);
         return;
     }
-
+#ifdef EXTERNAL_DATA
     char texture_name[120];
     strcpy(texture_name, (const char*)rdp.loaded_texture[tile].addr);
+#endif	  
     if (gfx_texture_cache_lookup(tile, &rendering_state.textures[tile], rdp.loaded_texture[tile].addr, fmt, siz)) {
 #ifdef EXTERNAL_DATA
         if (strcmp(texture_name, texture_metal) == 0) {
