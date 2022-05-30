@@ -1175,7 +1175,7 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
                 import_texture(i);
                 rdp.textures_changed[i] = false;
             }
-            bool linear_filter = configFiltering && ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT);
+            bool linear_filter = configFiltering && (rdp.other_mode_h);
             if (linear_filter != rendering_state.textures[i]->linear_filter || rdp.texture_tile.cms != rendering_state.textures[i]->cms || rdp.texture_tile.cmt != rendering_state.textures[i]->cmt) {
                 gfx_flush();
                 gfx_rapi->set_sampler_parameters(i, linear_filter, rdp.texture_tile.cms, rdp.texture_tile.cmt);
@@ -1205,13 +1205,13 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
         if (use_texture) {
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
-            if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
+            if (rdp.other_mode_h) {
                 // Linear filter adds 0.5f to the coordinates
-                u += 0.5f;
-                v += 0.5f;
+                u += (use_alpha ? 0.3f : 0.5f);
+                v += (use_alpha ? 0.3f : 0.7f);
             }
-            buf_vbo[buf_vbo_len++] = u / tex_width;
-            buf_vbo[buf_vbo_len++] = v / tex_height;
+            buf_vbo[buf_vbo_len++] = u / tex_width * (use_alpha ? 0.99f : 1.0f);
+            buf_vbo[buf_vbo_len++] = v / tex_height * (use_alpha ? 0.97f : 1.005f);
         }
         
         if (use_fog) {
