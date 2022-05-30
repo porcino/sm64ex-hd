@@ -1208,10 +1208,10 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
             if (rdp.other_mode_h) {
                 // Linear filter adds 0.5f to the coordinates
                 u += 0.5f;
-                v += (use_alpha ? 0.2f : 0.5f);
+                v += (use_alpha ? 0.32f : 0.5f);
             }
             buf_vbo[buf_vbo_len++] = u / tex_width;
-            buf_vbo[buf_vbo_len++] = v / tex_height * (use_alpha ? 1.008f : 1.005f);
+            buf_vbo[buf_vbo_len++] = v / tex_height * (use_alpha ? 1.005f : 1.005f);
         }
         
         if (use_fog) {
