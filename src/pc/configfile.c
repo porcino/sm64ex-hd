@@ -51,7 +51,7 @@ ConfigWindow configWindow       = {
     .aa_changed = false,
 };
 unsigned int configFiltering    = 1;          // 0=force nearest, 1=linear, (TODO) 2=three-point
-bool         configAntiAliasing = true;
+bool         configAntiAliasing = false;
 unsigned int configMasterVolume = 30; // 0 - MAX_VOLUME
 unsigned int configMusicVolume = MAX_VOLUME;
 unsigned int configSfxVolume = MAX_VOLUME;
@@ -108,6 +108,7 @@ bool         configDiscordRPC    = true;
 unsigned int configLives         = 4;
 
 static const struct ConfigOption options[] = {
+    {.name = "antialiasing",         .type = CONFIG_TYPE_BOOL, .boolValue = &configAntiAliasing},
     {.name = "fullscreen",           .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.fullscreen},
     {.name = "window_x",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.x},
     {.name = "window_y",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.y},

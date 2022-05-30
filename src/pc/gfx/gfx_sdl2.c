@@ -217,7 +217,7 @@ static void gfx_sdl_init(const char *window_title) {
     #endif
 
     //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    if (configAntiAliasing) SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
