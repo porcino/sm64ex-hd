@@ -173,7 +173,7 @@ static void on_anim_frame(double time) {
 
 void main_func(void) {
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
-    const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
+    const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : ".";
     fs_init(sys_ropaths, gamedir, userpath);
 
     configfile_load(configfile_name());

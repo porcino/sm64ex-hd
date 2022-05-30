@@ -289,6 +289,9 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 # Hi, I'm a PC
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
 ASM_DIRS :=
+ifeq ($(WINDOWS_BUILD),1)
+  RES_DIRS := res_win
+endif
 
 ifeq ($(DISCORDRPC),1)
   SRC_DIRS += src/pc/discord
@@ -308,14 +311,14 @@ MIPSBIT := -32
 ifeq ($(DEBUG),1)
   OPT_FLAGS := -g
 else
-  OPT_FLAGS := -O2
+  OPT_FLAGS := -Ofast
 endif
 
 # Set BITS (32/64) to compile for
 OPT_FLAGS += $(BITS)
 
 ifeq ($(TARGET_WEB),1)
-  OPT_FLAGS := -O2 -g4 --source-map-base http://localhost:8080/
+  OPT_FLAGS := -Ofast -g4 --source-map-base http://localhost:8080/
 endif
 
 ifeq ($(TARGET_RPI),1)
@@ -330,9 +333,9 @@ ifeq ($(TARGET_RPI),1)
                 model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
 
                 ifneq (,$(findstring 3,$(model)))
-                         OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -O3
+                         OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -mfpu=neon-fp-armv8 -Ofast
                          else
-                         OPT_FLAGS := -march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -O3
+                         OPT_FLAGS := -march=armv7-a -mtune=cortex-a7 -mfpu=neon-vfpv4 -Ofast
                 endif
         endif
 
@@ -341,9 +344,9 @@ ifeq ($(TARGET_RPI),1)
         ifneq (,$(findstring aarch64,$(machine)))
                 model = $(shell sh -c 'cat /sys/firmware/devicetree/base/model 2>/dev/null || echo unknown')
                 ifneq (,$(findstring 3,$(model)))
-                         OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -O3
+                         OPT_FLAGS := -march=armv8-a+crc -mtune=cortex-a53 -Ofast
                 else ifneq (,$(findstring 4,$(model)))
-                         OPT_FLAGS := -march=armv8-a+crc+simd -mtune=cortex-a72 -O3
+                         OPT_FLAGS := -march=armv8-a+crc+simd -mtune=cortex-a72 -Ofast
                 endif
 
         endif
@@ -358,6 +361,10 @@ C_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)) $(LEVEL_C_FILES)
 CXX_FILES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
 S_FILES := $(foreach dir,$(ASM_DIRS),$(wildcard $(dir)/*.s))
 GODDARD_C_FILES := $(foreach dir,$(GODDARD_SRC_DIRS),$(wildcard $(dir)/*.c))
+
+ifeq ($(WINDOWS_BUILD),1)
+  RC_FILES := $(foreach dir,$(RES_DIRS),$(wildcard $(dir)/*.rc))
+endif
 
 GENERATED_C_FILES := $(BUILD_DIR)/assets/mario_anim_data.c $(BUILD_DIR)/assets/demo_data.c \
   $(addprefix $(BUILD_DIR)/bin/,$(addsuffix _skybox.c,$(notdir $(basename $(wildcard textures/skyboxes/*.png)))))
@@ -404,6 +411,10 @@ O_FILES := $(foreach file,$(C_FILES),$(BUILD_DIR)/$(file:.c=.o)) \
            $(foreach file,$(CXX_FILES),$(BUILD_DIR)/$(file:.cpp=.o)) \
            $(foreach file,$(S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
            $(foreach file,$(GENERATED_C_FILES),$(file:.c=.o))
+
+ifeq ($(WINDOWS_BUILD),1)
+  O_FILES += $(foreach file,$(RC_FILES),$(BUILD_DIR)/$(file:.rc=.o))
+endif
 
 ULTRA_O_FILES := $(foreach file,$(ULTRA_S_FILES),$(BUILD_DIR)/$(file:.s=.o)) \
                  $(foreach file,$(ULTRA_C_FILES),$(BUILD_DIR)/$(file:.c=.o))
@@ -478,6 +489,8 @@ endif
 
 PYTHON := python3
 SDLCONFIG := $(CROSS)sdl2-config
+
+WINDRES := $(CROSS)windres
 
 # configure backend flags
 
@@ -559,8 +572,8 @@ endif
 
 # Check for Puppycam option
 ifeq ($(BETTERCAMERA),1)
-  CC_CHECK += -DBETTERCAMERA
-  CFLAGS += -DBETTERCAMERA
+  CC_CHECK += -DBETTERCAMERA -DWIDESCREEN
+  CFLAGS += -DBETTERCAMERA -DWIDESCREEN
   EXT_OPTIONS_MENU := 1
 endif
 
@@ -790,7 +803,7 @@ $(BUILD_DIR)/text/%/define_text.inc.c: text/define_text.inc.c text/%/courses.h t
 	$(CPP) $(VERSION_CFLAGS) $< -o - -I text/$*/ | $(TEXTCONV) charmap.txt - $@
 
 RSP_DIRS := $(BUILD_DIR)/rsp
-ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(ASM_DIRS) $(GODDARD_SRC_DIRS) $(ULTRA_SRC_DIRS) $(ULTRA_ASM_DIRS) $(ULTRA_BIN_DIRS) $(BIN_DIRS) $(TEXTURE_DIRS) $(TEXT_DIRS) $(SOUND_SAMPLE_DIRS) $(addprefix levels/,$(LEVEL_DIRS)) include) $(MIO0_DIR) $(addprefix $(MIO0_DIR)/,$(VERSION)) $(SOUND_BIN_DIR) $(SOUND_BIN_DIR)/sequences/$(VERSION) $(RSP_DIRS)
+ALL_DIRS := $(BUILD_DIR) $(addprefix $(BUILD_DIR)/,$(SRC_DIRS) $(ASM_DIRS) $(GODDARD_SRC_DIRS) $(ULTRA_SRC_DIRS) $(ULTRA_ASM_DIRS) $(ULTRA_BIN_DIRS) $(BIN_DIRS) $(TEXTURE_DIRS) $(TEXT_DIRS) $(SOUND_SAMPLE_DIRS) $(RES_DIRS) $(addprefix levels/,$(LEVEL_DIRS)) include) $(MIO0_DIR) $(addprefix $(MIO0_DIR)/,$(VERSION)) $(SOUND_BIN_DIR) $(SOUND_BIN_DIR)/sequences/$(VERSION) $(RSP_DIRS)
 
 # Make sure build directory exists before compiling anything
 DUMMY != mkdir -p $(ALL_DIRS)
@@ -927,34 +940,34 @@ $(BUILD_DIR)/actors/%.o: OPT_FLAGS := -g
 $(BUILD_DIR)/bin/%.o: OPT_FLAGS := -g
 $(BUILD_DIR)/src/goddard/%.o: OPT_FLAGS := -g
 $(BUILD_DIR)/src/goddard/%.o: MIPSISET := -mips1
-$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
-$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O2 -framepointer -Wo,-loopunroll,0
+$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -Ofast -Wo,-loopunroll,0
+$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -Ofast -framepointer -Wo,-loopunroll,0
 $(BUILD_DIR)/lib/src/%.o: OPT_FLAGS :=
 $(BUILD_DIR)/lib/src/math/ll%.o: MIPSISET := -mips3 -32
-$(BUILD_DIR)/lib/src/math/%.o: OPT_FLAGS := -O2
+$(BUILD_DIR)/lib/src/math/%.o: OPT_FLAGS := -Ofast
 $(BUILD_DIR)/lib/src/math/ll%.o: OPT_FLAGS :=
-$(BUILD_DIR)/lib/src/ldiv.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/string.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/lib/src/gu%.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/al%.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/ldiv.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/string.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/gu%.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/al%.o: OPT_FLAGS := -Ofast
 
 ifeq ($(VERSION),eu)
-$(BUILD_DIR)/lib/src/_Litob.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/_Ldtob.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/_Printf.o: OPT_FLAGS := -O3
-$(BUILD_DIR)/lib/src/sprintf.o: OPT_FLAGS := -O3
+$(BUILD_DIR)/lib/src/_Litob.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/_Ldtob.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/_Printf.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/lib/src/sprintf.o: OPT_FLAGS := -Ofast
 
 # enable loop unrolling except for external.c (external.c might also have used
 # unrolling, but it makes one loop harder to match)
-$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -O2
-$(BUILD_DIR)/src/audio/external.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0
+$(BUILD_DIR)/src/audio/%.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/src/audio/load.o: OPT_FLAGS := -Ofast
+$(BUILD_DIR)/src/audio/external.o: OPT_FLAGS := -Ofast -Wo,-loopunroll,0
 else
 
 # The source-to-source optimizer copt is enabled for audio. This makes it use
 # acpp, which needs -Wp,-+ to handle C++-style comments.
-$(BUILD_DIR)/src/audio/effects.o: OPT_FLAGS := -O2 -Wo,-loopunroll,0 -sopt,-inline=sequence_channel_process_sound,-scalaroptimize=1 -Wp,-+
-$(BUILD_DIR)/src/audio/synthesis.o: OPT_FLAGS := -O2 -sopt,-scalaroptimize=1 -Wp,-+
+$(BUILD_DIR)/src/audio/effects.o: OPT_FLAGS := -Ofast -Wo,-loopunroll,0 -sopt,-inline=sequence_channel_process_sound,-scalaroptimize=1 -Wp,-+
+$(BUILD_DIR)/src/audio/synthesis.o: OPT_FLAGS := -Ofast -sopt,-scalaroptimize=1 -Wp,-+
 #$(BUILD_DIR)/src/audio/seqplayer.o: OPT_FLAGS := -O2 -sopt,-inline_manual,-scalaroptimize=1 -Wp,-+ #-Wo,-v,-bb,-l,seqplayer_list.txt
 
 # Add a target for build/eu/src/audio/*.copt to make it easier to see debug
@@ -991,6 +1004,9 @@ $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
 
+# Windows Icon
+$(BUILD_DIR)/%.o: %.rc
+	$(WINDRES) -o $@ -i $<
 
 
 $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS)

@@ -37,10 +37,16 @@
 #include "pc/cheats.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
+extern u8 newcam_active;
+extern u16 newcam_distance;
+extern u16 newcam_distance_target;
+extern struct CameraFOVStatus sFOVState;
+extern bool mouseCursor;
 #endif
 
 u32 unused80339F10;
 s8 filler80339F1C[20];
+#include "splits.h"
 
 /**************************************************
  *                    ANIMATIONS                  *
@@ -1255,6 +1261,16 @@ void squish_mario_model(struct MarioState *m) {
  * Debug function that prints floor normal, velocity, and action information.
  */
 void debug_print_speed_action_normal(struct MarioState *m) {
+#ifdef BETTERCAMERA
+    mouseCursor = FALSE;
+    if ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_CUTSCENE && newcam_active && configCameraFOV) {
+        u8 fieldov = m->forwardVel > 0.f ? m->forwardVel / 4.f : 0.f;
+        s16 zoom_speed = newcam_distance_target - ((m->forwardVel > 0.f ? m->forwardVel : 0.f) * 10.f);
+        fieldov = 45.f + (fieldov < 30.f ? fieldov : 30.f);
+        camera_approach_f32_symmetric_bool(&sFOVState.fov, fieldov, (fieldov - sFOVState.fov) / 10.f);
+        newcam_distance = zoom_speed > 200 ? zoom_speed : 200;
+    }
+#endif
     f32 steepness;
     f32 floor_nY;
 
@@ -1270,6 +1286,13 @@ void debug_print_speed_action_normal(struct MarioState *m) {
         // STA short for "status," the official action name via SMS map.
         print_text_fmt_int(210, 56, "STA %x", (m->action & ACT_ID_MASK));
     }
+    static bool split_final;
+    if (m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_THROW_CATCH_KEY || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_MISSING_CAP || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_TAKE_CAP_OFF_THEN_ON || m->action == ACT_JUMBO_STAR_CUTSCENE || m->action == ACT_JUMBO_STAR_CUTSCENE || m->marioObj->header.gfx.unk38.animID == MARIO_ANIM_THROW_CATCH_KEY) {
+        if (!split_final) {
+            split_final = true;
+            split_press(gMarioState->numStars);
+        }
+    } else if (split_final) split_final = false;
 }
 
 /**
@@ -1766,6 +1789,9 @@ s32 execute_mario_action(UNUSED struct Object *o) {
             return 0;
         }
 
+        if (sTimeTrialsPos[0] != 0 || sTimeTrialsPos[1] != 0 || sTimeTrialsPos[2] != 0) {
+            return 0;
+        }
         // The function can loop through many action shifts in one frame,
         // which can lead to unexpected sub-frame behavior. Could potentially hang
         // if a loop of actions were found, but there has not been a situation found.
@@ -1776,10 +1802,12 @@ s32 execute_mario_action(UNUSED struct Object *o) {
                     break;
 
                 case ACT_GROUP_MOVING:
+                    if(lastPitch != 0) lastPitch = 0;
                     inLoop = mario_execute_moving_action(gMarioState);
                     break;
 
                 case ACT_GROUP_AIRBORNE:
+                    if(lastPitch != 0) lastPitch = 0;
                     inLoop = mario_execute_airborne_action(gMarioState);
                     break;
 
@@ -1936,7 +1964,7 @@ void init_mario_from_save_file(void) {
         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     gMarioState->numKeys = 0;
 
-    gMarioState->numLives = 4;
+    gMarioState->numLives = gMarioState->numStars == 120 ? configLives : 4;
     gMarioState->health = 0x880;
 
     gMarioState->prevNumStarsForDialog = gMarioState->numStars;

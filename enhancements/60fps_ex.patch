@@ -1,3 +1,23 @@
+diff --git a/include/text_options_strings.h.in b/include/text_options_strings.h.in
+index 36ae285..37fcfae 100644
+--- a/include/text_options_strings.h.in
++++ b/include/text_options_strings.h.in
+@@ -54,6 +54,7 @@
+ #define TEXT_OPT_VSYNC     _("VERTICAL SYNC")
+ #define TEXT_OPT_AUTO      _("AUTO")
+ #define TEXT_OPT_INPUTDISPLAY _("INPUT DISPLAY")
++#define TEXT_OPT_60FPS     _("60 FPS")
+ #define TEXT_OPT_FRAMESKIP _("FRAMESKIP")
+ #define TEXT_OPT_HUD       _("HUD")
+ #define TEXT_OPT_THREEPT   _("THREE POINT")
+@@ -122,6 +123,7 @@
+ #define TEXT_OPT_VSYNC     _("Vertical Sync")
+ #define TEXT_OPT_AUTO      _("Auto")
+ #define TEXT_OPT_INPUTDISPLAY _("Input Display")
++#define TEXT_OPT_60FPS     _("60 fps")
+ #define TEXT_OPT_HUD       _("HUD")
+ #define TEXT_OPT_FRAMESKIP _("Frame Skip")
+ #define TEXT_OPT_THREEPT   _("Three-point")
 diff --git a/include/types.h b/include/types.h
 index b3dc27e..c46bdf0 100644
 --- a/include/types.h
@@ -112,7 +132,7 @@ index 802d97a..1b0d677 100644
  
  /** A node that allows an object to specify a different culling radius than the
 diff --git a/src/engine/surface_collision.c b/src/engine/surface_collision.c
-index 1da535b..49a5c03 100644
+index 73063ee..47612a5 100644
 --- a/src/engine/surface_collision.c
 +++ b/src/engine/surface_collision.c
 @@ -8,6 +8,7 @@
@@ -232,18 +252,18 @@ index 1da535b..49a5c03 100644
          break;
      }
 diff --git a/src/engine/surface_load.c b/src/engine/surface_load.c
-index ac2ee50..323b7d0 100644
+index c62ef00..6ed35ab 100644
 --- a/src/engine/surface_load.c
 +++ b/src/engine/surface_load.c
-@@ -14,6 +14,7 @@
- #include "game/mario.h"
- #include "game/object_list_processor.h"
- #include "surface_load.h"
+@@ -17,6 +17,7 @@
+ #ifndef NODRAWINGDISTANCE
+ #include "pc/configfile.h"
+ #endif
 +#include "game/game_init.h"
  
  s32 unused8038BE90;
  
-@@ -359,6 +360,11 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
+@@ -362,6 +363,11 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices) {
  
      surface = alloc_surface();
  
@@ -256,7 +276,7 @@ index ac2ee50..323b7d0 100644
      surface->vertex2[0] = x2;
      surface->vertex3[0] = x3;
 diff --git a/src/game/camera.c b/src/game/camera.c
-index bde0662..9351dea 100644
+index 2a89113..b56229d 100644
 --- a/src/game/camera.c
 +++ b/src/game/camera.c
 @@ -484,6 +484,10 @@ CameraTransition sModeTransitions[] = {
@@ -607,58 +627,8 @@ index 7a83b53..f4acc2d 100644
  };
  
  extern s8 gEnvFxMode;
-diff --git a/src/game/hud.c b/src/game/hud.c
-index 1540b67..0de6e0b 100644
---- a/src/game/hud.c
-+++ b/src/game/hud.c
-@@ -59,6 +59,20 @@ static struct UnusedHUDStruct sUnusedHUDValues = { 0x00, 0x0A, 0x00 };
- 
- static struct CameraHUD sCameraHUD = { CAM_STATUS_NONE };
- 
-+static u32 sPowerMeterLastRenderTimestamp;
-+static s16 sPowerMeterLastY;
-+static Gfx *sPowerMeterDisplayListPos;
-+
-+void patch_interpolated_hud(void) {
-+    if (sPowerMeterDisplayListPos != NULL) {
-+        Mtx *mtx = alloc_display_list(sizeof(Mtx));
-+        guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
-+        gSPMatrix(sPowerMeterDisplayListPos, VIRTUAL_TO_PHYSICAL(mtx),
-+              G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
-+        sPowerMeterDisplayListPos = NULL;
-+    }
-+}
-+
- /**
-  * Renders a rgba16 16x16 glyph texture from a table list.
-  */
-@@ -111,6 +125,7 @@ void render_power_meter_health_segment(s16 numHealthWedges) {
-  */
- void render_dl_power_meter(s16 numHealthWedges) {
-     Mtx *mtx;
-+    f32 interpolatedY;
- 
-     mtx = alloc_display_list(sizeof(Mtx));
- 
-@@ -118,7 +133,15 @@ void render_dl_power_meter(s16 numHealthWedges) {
-         return;
-     }
- 
--    guTranslate(mtx, (f32) sPowerMeterHUD.x, (f32) sPowerMeterHUD.y, 0);
-+    if (gGlobalTimer == sPowerMeterLastRenderTimestamp + 1) {
-+        interpolatedY = (sPowerMeterLastY + sPowerMeterHUD.y) / 2.0f;
-+    } else {
-+        interpolatedY = sPowerMeterHUD.y;
-+    }
-+    guTranslate(mtx, (f32) sPowerMeterHUD.x, interpolatedY, 0);
-+    sPowerMeterLastY = sPowerMeterHUD.y;
-+    sPowerMeterLastRenderTimestamp = gGlobalTimer;
-+    sPowerMeterDisplayListPos = gDisplayListHead;
- 
-     gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx++),
-               G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
 diff --git a/src/game/ingame_menu.c b/src/game/ingame_menu.c
-index 7ae9f1e..1c23c96 100644
+index fe89c3e..46c09e0 100644
 --- a/src/game/ingame_menu.c
 +++ b/src/game/ingame_menu.c
 @@ -130,6 +130,42 @@ s32 gDialogResponse = 0;
@@ -774,6 +744,45 @@ index 22b45b3..109d7f7 100644
  }
  
  void cur_obj_set_pos_to_home_and_stop(void) {
+diff --git a/src/game/options_menu.c b/src/game/options_menu.c
+index d520876..e468e25 100644
+--- a/src/game/options_menu.c
++++ b/src/game/options_menu.c
+@@ -84,6 +84,7 @@ static const u8 optsVideoStr[][32] = {
+     { TEXT_OPT_VSYNC },
+     { TEXT_OPT_AUTO },
+     { TEXT_OPT_INPUTDISPLAY },
++    { TEXT_OPT_60FPS },
+     { TEXT_OPT_FRAMESKIP },
+     { TEXT_OPT_HUD },
+     { TEXT_OPT_THREEPT },
+@@ -481,7 +482,7 @@ static const u8 bindKeyNames[][32] = {
+ static const u8 *filterChoices[] = {
+     optsVideoStr[3],
+     optsVideoStr[4],
+-    //optsVideoStr[11],
++    //optsVideoStr[12],
+ };
+ 
+ static const u8 *vsyncChoices[] = {
+@@ -619,12 +620,13 @@ static struct Option optsVideo[] = {
+     DEF_OPT_CHOICE( optsVideoStr[1], &configFiltering, filterChoices ),
+     DEF_OPT_TOGGLE( optsVideoStr[2], &configAntiAliasing ),
+-    DEF_OPT_TOGGLE( optsVideoStr[9], &configFrameskip ),
++    DEF_OPT_TOGGLE( optsVideoStr[9], &config60fps ),
++    DEF_OPT_TOGGLE( optsVideoStr[10], &configFrameskip ),
+ #ifndef NODRAWINGDISTANCE
+-    DEF_OPT_SCROLL( optsVideoStr[12], &configDrawDistance, 50, 509, 10 ),
++    DEF_OPT_SCROLL( optsVideoStr[13], &configDrawDistance, 50, 509, 10 ),
+ #endif
+-    DEF_OPT_SCROLL( optsVideoStr[13], &configMetalRate, 2, 31, 2 ),
++    DEF_OPT_SCROLL( optsVideoStr[14], &configMetalRate, 2, 31, 2 ),
+     DEF_OPT_TOGGLE( optsVideoStr[8], &configInputDisplay ),
+-    DEF_OPT_TOGGLE( optsVideoStr[10], &configHUD ),
++    DEF_OPT_TOGGLE( optsVideoStr[11], &configHUD ),
+     DEF_OPT_BUTTON( optsVideoStr[5], optvideo_reset_window ),
+ };
+ 
 diff --git a/src/game/paintings.c b/src/game/paintings.c
 index 6cae19c..a304d4a 100644
 --- a/src/game/paintings.c
@@ -908,7 +917,7 @@ index d5bf577..71656b4 100644
 +        Gfx *pos = gMtxTbl[i].pos;
 +        gSPMatrix(pos++, VIRTUAL_TO_PHYSICAL(gMtxTbl[i].mtx),
 +                  G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
-+        gSPDisplayList(pos++, gMtxTbl[i].displayList);
++        if ((u32) gMtxTblSize < sizeof(gMtxTbl) / sizeof(gMtxTbl[0])) gSPDisplayList(pos++, gMtxTbl[i].displayList);
 +    }
 +
 +    if (sViewportPos != NULL) {
@@ -1872,6 +1881,38 @@ index 37c6752..d823d40 100644
          gSPMatrix(displayListIter++, scaleMat, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH);
          gSPDisplayList(displayListIter++, &intro_seg7_dl_0700B3A0);
          gSPPopMatrix(displayListIter++, G_MTX_MODELVIEW);
+diff --git a/src/pc/configfile.c b/src/pc/configfile.c
+index 12548e8..e3b1fbe 100644
+--- a/src/pc/configfile.c
++++ b/src/pc/configfile.c
+@@ -91,6 +91,7 @@ bool         configCameraAnalog  = false;
+ #endif
+ bool         configSkipIntro     = 0;
+ bool         configInputDisplay  = false;
++bool         config60fps         = true;
+ bool         configFrameskip     = true;
+ bool         configHUD           = true;
+ unsigned int configSpeed         = 2;
+@@ -108,6 +109,7 @@ static const struct ConfigOption options[] = {
+     {.name = "window_h",             .type = CONFIG_TYPE_UINT, .uintValue = &configWindow.h},
+     {.name = "vsync",                .type = CONFIG_TYPE_BOOL, .boolValue = &configWindow.vsync},
+     {.name = "texture_filtering",    .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
++    {.name = "60fps",                .type = CONFIG_TYPE_BOOL, .boolValue = &config60fps},
+     {.name = "frameskip",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFrameskip},
+     #ifndef NODRAWINGDISTANCE
+     {.name = "drawing_distance",     .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
+diff --git a/src/pc/configfile.h b/src/pc/configfile.h
+index 51fa5b6..442e327 100644
+--- a/src/pc/configfile.h
++++ b/src/pc/configfile.h
+@@ -57,6 +57,7 @@ extern bool         configEnableCamera;
+ extern bool         configCameraAnalog;
+ #endif
+ extern bool         configInputDisplay;
++extern bool         config60fps;
+ extern bool         configFrameskip;
+ extern bool         configHUD;
+ #ifndef NODRAWINGDISTANCE
 diff --git a/src/pc/gfx/gfx_dxgi.cpp b/src/pc/gfx/gfx_dxgi.cpp
 index 0467495..fa4eb33 100644
 --- a/src/pc/gfx/gfx_dxgi.cpp
@@ -1890,11 +1931,11 @@ index 0467495..fa4eb33 100644
  
  using namespace Microsoft::WRL; // For ComPtr
 diff --git a/src/pc/gfx/gfx_sdl2.c b/src/pc/gfx/gfx_sdl2.c
-index 0108ca9..28d56ac 100644
+index b203057..d8a3887 100644
 --- a/src/pc/gfx/gfx_sdl2.c
 +++ b/src/pc/gfx/gfx_sdl2.c
 @@ -150,7 +150,11 @@ static inline void gfx_sdl_set_vsync(const bool enabled) {
-     if (enabled) {
+     /*if (enabled) {
          // try to detect refresh rate
          SDL_GL_SetSwapInterval(1);
 -        const int vblanks = gCLIOpts.SyncFrames ? (int)gCLIOpts.SyncFrames : test_vsync();
@@ -1911,12 +1952,20 @@ index 0108ca9..28d56ac 100644
  
      perf_freq = SDL_GetPerformanceFrequency();
 -    frame_time = perf_freq / FRAMERATE;
-+    frame_time = perf_freq / (2 * FRAMERATE);
++    frame_time = perf_freq / ((config60fps ? 2 : 1) * FRAMERATE);
  
      for (size_t i = 0; i < sizeof(windows_scancode_table) / sizeof(SDL_Scancode); i++) {
          inverted_scancode_table[windows_scancode_table[i]] = i;
+@@ -343,6 +347,7 @@ static inline void sync_framerate_with_timer(void) {
+ static inline void sync_framerate_with_timer(void) {
+     static double last_time;
+     const double now = SDL_GetPerformanceCounter();
++    frame_time = perf_freq / ((config60fps ? 2 : 1) * FRAMERATE);
+     double half_time = frame_time / 11;
+     double frame_time_wskip = frame_time;
+     if (frame_skip == 1) {
 diff --git a/src/pc/pc_main.c b/src/pc/pc_main.c
-index 923e7ea..4fe6161 100644
+index 2bac11b..47f29b4 100644
 --- a/src/pc/pc_main.c
 +++ b/src/pc/pc_main.c
 @@ -83,6 +83,25 @@ void send_display_list(struct SPTask *spTask) {
@@ -1928,7 +1977,7 @@ index 923e7ea..4fe6161 100644
 +    extern void patch_screen_transition_interpolated(void);
 +    extern void patch_title_screen_scales(void);
 +    extern void patch_interpolated_dialog(void);
-+    extern void patch_interpolated_hud(void);
++    
 +    extern void patch_interpolated_paintings(void);
 +    extern void patch_interpolated_bubble_particles(void);
 +    extern void patch_interpolated_snow_particles(void);
@@ -1936,7 +1985,7 @@ index 923e7ea..4fe6161 100644
 +    patch_screen_transition_interpolated();
 +    patch_title_screen_scales();
 +    patch_interpolated_dialog();
-+    patch_interpolated_hud();
++    
 +    patch_interpolated_paintings();
 +    patch_interpolated_bubble_particles();
 +    patch_interpolated_snow_particles();
@@ -1945,15 +1994,20 @@ index 923e7ea..4fe6161 100644
  void produce_one_frame(void) {
      gfx_start_frame();
  
-@@ -110,6 +129,11 @@ void produce_one_frame(void) {
+@@ -110,6 +129,13 @@ void produce_one_frame(void) {
      audio_api->play((u8 *)audio_buffer, 2 * num_audio_samples * 4);
  
      gfx_end_frame();
 +
-+    gfx_start_frame();
-+    patch_interpolations();
-+    send_display_list(gGfxSPTask);
-+    gfx_end_frame();
++    if (config60fps) {
++        gfx_start_frame();
++        patch_interpolations();
++        send_display_list(gGfxSPTask);
++        gfx_end_frame();
++    }
  }
  
  void audio_shutdown(void) {
+-- 
+2.29.2
+

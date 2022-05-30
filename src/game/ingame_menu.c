@@ -24,6 +24,7 @@
 #include "types.h"
 #include "macros.h"
 #include "pc/cheats.h"
+#include "pc/controller/controller_keyboard.h"
 #ifdef BETTERCAMERA
 #include "bettercamera.h"
 #endif
@@ -1851,6 +1852,14 @@ void set_menu_mode(s16 mode) {
     }
 }
 
+void unpause_game() {
+    optmenu_toggle();
+    level_set_transition(0, 0);
+    play_sound(SOUND_MENU_PAUSE_2, gDefaultSoundArgs);
+    gDialogBoxState = DIALOG_STATE_OPENING;
+    gMenuMode = -1;
+}
+
 void reset_cutscene_msg_fade(void) {
     gCutsceneMsgFade = 0;
 }
@@ -2134,6 +2143,7 @@ void shade_screen(void) {
     gDPSetEnvColor(gDisplayListHead++, 0, 0, 0, 110);
     gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    gTimeTableDisplayListHead = gDisplayListHead;
 }
 
 void print_animated_red_coin(s16 x, s16 y) {
@@ -2522,6 +2532,9 @@ void render_pause_castle_main_strings(s16 x, s16 y) {
 
     void *courseName;
 
+    if (time_trials_render_time_table(&gDialogLineNum)) {
+        return;
+    }
     u8 strVal[8];
     s16 starNum = gDialogLineNum;
 
@@ -2638,13 +2651,15 @@ s16 render_pause_courses_and_castle(void) {
 /* Added support for the "Exit course at any time" cheat */
             if ((gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT) || (Cheats.EnableCheats && Cheats.ExitAnywhere)) {
                 render_pause_course_options(99, 93, &gDialogLineNum, 15);
+            } else {
+                time_trials_render_time_table(&gDialogLineNum);
             }
 
 #ifdef VERSION_EU
             if (gPlayer3Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
             if (gPlayer3Controller->buttonPressed & A_BUTTON
-             || gPlayer3Controller->buttonPressed & START_BUTTON)
+             || gPlayer3Controller->buttonPressed & START_BUTTON || pressed_esc == 1)
 #endif
             {
                 level_set_transition(0, 0);
@@ -2658,6 +2673,7 @@ s16 render_pause_courses_and_castle(void) {
                     num = 1;
                 }
 
+                if (!(gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT)) return 1;
                 return num;
             }
             break;
@@ -2671,7 +2687,7 @@ s16 render_pause_courses_and_castle(void) {
             if (gPlayer3Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
             if (gPlayer3Controller->buttonPressed & A_BUTTON
-             || gPlayer3Controller->buttonPressed & START_BUTTON)
+             || gPlayer3Controller->buttonPressed & START_BUTTON || pressed_esc == 1)
 #endif
             {
                 level_set_transition(0, 0);
@@ -2868,7 +2884,7 @@ void render_course_complete_lvl_info_and_hud_str(void) {
         play_star_fanfare_and_flash_hud(1, 1 << (gLastCompletedStarNum - 1));
 
         if (gLastCompletedStarNum == 7) {
-            name = segmented_to_virtual(actNameTbl[COURSE_STAGES_MAX * 6 + 1]);
+            name = segmented_to_virtual(actNameTbl[COURSE_STAGES_MAX * 6]);
         } else {
             name = segmented_to_virtual(actNameTbl[(gLastCompletedCourseNum - 1) * 6 + gLastCompletedStarNum - 1]);
         }
@@ -2937,13 +2953,11 @@ void render_course_complete_lvl_info_and_hud_str(void) {
 #if defined(VERSION_JP) || defined(VERSION_SH)
 #define TXT_SAVECONT_Y 2
 #define TXT_SAVEQUIT_Y 18
-#define TXT_SAVE_EXIT_GAME_Y 38
-#define TXT_CONTNOSAVE_Y 54
+#define TXT_CONTNOSAVE_Y 38
 #else
 #define TXT_SAVECONT_Y 0
 #define TXT_SAVEQUIT_Y 20
-#define TXT_SAVE_EXIT_GAME_Y 40
-#define TXT_CONTNOSAVE_Y 60
+#define TXT_CONTNOSAVE_Y 40
 #endif
 
 #ifdef VERSION_EU
@@ -2966,12 +2980,6 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
         { TEXT_SAVE_AND_QUIT_DE }
     };
 
-    u8 textSaveExitGame[][26] = { // New function to exit game
-        { TEXT_SAVE_EXIT_GAME },
-        { TEXT_SAVE_EXIT_GAME_FR },
-        { TEXT_SAVE_EXIT_GAME_DE }
-    };
-
     u8 textContinueWithoutSaveArr[][27] = {
         { TEXT_CONTINUE_WITHOUT_SAVING },
         { TEXT_CONTINUE_WITHOUT_SAVING_FR },
@@ -2980,24 +2988,21 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 
 #define textSaveAndContinue textSaveAndContinueArr[gInGameLanguage]
 #define textSaveAndQuit textSaveAndQuitArr[gInGameLanguage]
-#define textSaveExitGame textSaveExitGame[gInGameLanguage]
 #define textContinueWithoutSave textContinueWithoutSaveArr[gInGameLanguage]
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
     u8 textSaveAndContinue[] = { TEXT_SAVE_AND_CONTINUE };
     u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
-    u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
     u8 textContinueWithoutSave[] = { TEXT_CONTINUE_WITHOUT_SAVING };
 #endif
 
-    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 4); // Increased to '4' to handle Exit Game 
+    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 3); // Increased to '4' to handle Exit Game 
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
     print_generic_string(TXT_SAVEOPTIONS_X, y + TXT_SAVECONT_Y, textSaveAndContinue);
     print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVEQUIT_Y, textSaveAndQuit);
-    print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVE_EXIT_GAME_Y, textSaveExitGame);
     print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_CONTNOSAVE_Y, textContinueWithoutSave);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
@@ -3071,6 +3076,7 @@ s16 render_menus_and_dialogs() {
     s16 mode = 0;
 
     create_dl_ortho_matrix();
+    time_trials_update(gMenuMode != -1);
 
     if (gMenuMode != -1) {
         switch (gMenuMode) {

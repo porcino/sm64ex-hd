@@ -34,6 +34,8 @@
 #include "pc/pc_main.h"
 #include "pc/cliopts.h"
 #include "pc/configfile.h"
+#include "pc/controller/controller_keyboard.h"
+#include "splits.h"
 
 #define PLAY_MODE_NORMAL 0
 #define PLAY_MODE_PAUSED 2
@@ -210,7 +212,7 @@ u32 pressed_pause(void) {
     u32 intangible = (gMarioState->action & ACT_FLAG_INTANGIBLE) != 0;
 
     if (!intangible && !val4 && !gWarpTransition.isActive && sDelayedWarpOp == WARP_OP_NONE
-        && (gPlayer1Controller->buttonPressed & START_BUTTON)) {
+        && (gPlayer1Controller->buttonPressed & START_BUTTON || pressed_esc == 1)) {
         return TRUE;
     }
 
@@ -457,6 +459,9 @@ void init_mario_after_warp(void) {
             play_sound(SOUND_MENU_MARIO_CASTLE_WARP, gDefaultSoundArgs);
         }
 #endif
+    }
+    if ((gCurrLevelNum == 17 && splits[split_star] == 121) || (gCurrLevelNum == 23 && splits[split_star] == 122) || (gCurrLevelNum == 19 && splits[split_star] == 123) || (gCurrLevelNum == 21 && splits[split_star] == 124)) {
+        split_press(gMarioState->numStars);
     }
 }
 
@@ -940,6 +945,7 @@ void update_hud_values(void) {
         } else {
             gHudDisplay.flags &= ~HUD_DISPLAY_FLAG_EMPHASIZE_POWER;
         }
+        if (gMarioState->numStars == 120) configLives = gMarioState->numLives > 4 ? gMarioState->numLives : 4;
     }
 }
 
@@ -1324,4 +1330,12 @@ s32 lvl_set_current_level(UNUSED s16 arg0, s32 levelNum) {
 s32 lvl_play_the_end_screen_sound(UNUSED s16 arg0, UNUSED s32 arg1) {
     play_sound(SOUND_MENU_THANK_YOU_PLAYING_MY_GAME, gDefaultSoundArgs);
     return 1;
+}
+
+// Added so the player can reset the game at the end screen
+s32 credits_end_wait_for_reset() {
+    if (gPlayer1Controller->buttonPressed & START_BUTTON) {
+        return 1;
+    }
+    return 0;
 }

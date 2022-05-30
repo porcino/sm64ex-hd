@@ -30,9 +30,10 @@
 #include "thread6.h"
 #include "../../include/libc/stdlib.h"
 #include "pc/pc_main.h"
+#include "time_trials.h"
 
 // TODO: put this elsewhere
-enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME, SAVE_OPT_CONTINUE_DONT_SAVE };
+enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_CONTINUE_DONT_SAVE };
 
 static struct Object *sIntroWarpPipeObj;
 static struct Object *sEndPeachObj;
@@ -255,20 +256,16 @@ void handle_save_menu(struct MarioState *m) {
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
-        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE || gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
+        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
             save_file_do_save(gCurrSaveFileNum - 1);
 
             if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
                 fade_into_special_warp(-2, 0); // reset game
-            } else if (gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME) {
-                //initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
-                fade_into_special_warp(0, 0);
-                game_exit();
             }
         }
 
         // not quitting
-        if (gSaveOptSelectIndex != SAVE_OPT_SAVE_EXIT_GAME) {
+        if (gSaveOptSelectIndex != SAVE_OPT_SAVE_AND_QUIT) {
             disable_time_stop();
             m->faceAngle[1] += 0x8000;
             // figure out what dialog to show, if we should
@@ -1168,6 +1165,14 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
     return FALSE;
 }
 
+void act_death_exit_heal(struct MarioState *m) {
+    if (sTimeTrialsHealth == 0) {
+        m->numLives--;
+        // restore 7.75 units of health
+        m->healCounter = 31;
+    }
+}
+
 s32 act_death_exit(struct MarioState *m) {
     if (15 < m->actionTimer++
         && launch_mario_until_land(m, ACT_DEATH_EXIT_LAND, MARIO_ANIM_GENERAL_FALL, -32.0f)) {
@@ -1177,9 +1182,7 @@ s32 act_death_exit(struct MarioState *m) {
         play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
 #endif
         queue_rumble_data(5, 80);
-        m->numLives--;
-        // restore 7.75 units of health
-        m->healCounter = 31;
+        act_death_exit_heal(m);
     }
     // one unit of health
     m->health = 0x0100;
@@ -1193,9 +1196,7 @@ s32 act_unused_death_exit(struct MarioState *m) {
 #else
         play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
 #endif
-        m->numLives--;
-        // restore 7.75 units of health
-        m->healCounter = 31;
+        act_death_exit_heal(m);
     }
     // one unit of health
     m->health = 0x0100;
@@ -1210,9 +1211,7 @@ s32 act_falling_death_exit(struct MarioState *m) {
         play_sound(SOUND_MARIO_OOOF2, m->marioObj->header.gfx.cameraToObject);
 #endif
         queue_rumble_data(5, 80);
-        m->numLives--;
-        // restore 7.75 units of health
-        m->healCounter = 31;
+        act_death_exit_heal(m);
     }
     // one unit of health
     m->health = 0x0100;
@@ -1255,8 +1254,7 @@ s32 act_special_death_exit(struct MarioState *m) {
 
     if (launch_mario_until_land(m, ACT_HARD_BACKWARD_GROUND_KB, MARIO_ANIM_BACKWARD_AIR_KB, -24.0f)) {
         queue_rumble_data(5, 80);
-        m->numLives--;
-        m->healCounter = 31;
+        act_death_exit_heal(m);
     }
     // show Mario
     marioObj->header.gfx.node.flags |= GRAPH_RENDER_ACTIVE;

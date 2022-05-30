@@ -5,6 +5,12 @@
 #include <string.h>
 #include <stdbool.h>
 #include <assert.h>
+#ifdef __MINGW32__
+#define GLEW_STATIC
+#include <GL/glew.h>
+#else
+#include <SDL2/SDL_opengl.h>
+#endif
 
 #ifdef EXTERNAL_DATA
 #define STB_IMAGE_IMPLEMENTATION
@@ -27,6 +33,8 @@
 #include "../platform.h"
 #include "../configfile.h"
 #include "../fs/fs.h"
+#include "game/area.h"
+#include "game/object_list_processor.h"
 
 #define SUPPORT_CHECK(x) assert(x)
 
@@ -60,6 +68,8 @@
 
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
 #define HASH_MASK (HASHMAP_LEN - 1)
+
+extern int frame_skip;
 
 struct RGBA {
     uint8_t r, g, b, a;
@@ -176,6 +186,15 @@ static size_t buf_vbo_num_tris;
 static struct GfxWindowManagerAPI *gfx_wapi;
 static struct GfxRenderingAPI *gfx_rapi;
 
+#ifdef EXTERNAL_DATA
+static char texture_metal[35] = "actors/mario/mario_metal.rgba16";
+static unsigned char* metal_data;
+static unsigned char* metal_original;
+static int metal_saved = -1;
+static int metal_w, metal_h;
+static int metal_ow, metal_oh;
+static bool metal_can_add = true;
+#endif
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -507,6 +526,83 @@ static void import_texture_ci8(int tile) {
 
 #else // EXTERNAL_DATA
 
+static inline bool load_DDS(const char *path) {
+	unsigned char* header;
+	unsigned int width;
+	unsigned int height;
+	unsigned int mipMapCount;
+	unsigned int blockSize;
+	unsigned int format;
+	unsigned int w;
+	unsigned int h;
+	unsigned char* buffer = 0;
+	bool found = false;
+
+	u64 file_size = 0;
+	unsigned char* imgdata = fs_load_file(path, &file_size);
+
+	header = malloc(128);
+	if (!imgdata) return found;
+	memcpy(header, imgdata, 128);
+
+	if(memcmp(header, "DDS ", 4) != 0)
+		goto exit;
+	
+	height = (header[12]) | (header[13] << 8) | (header[14] << 16) | (header[15] << 24);
+	width = (header[16]) | (header[17] << 8) | (header[18] << 16) | (header[19] << 24);
+	mipMapCount = (header[28]) | (header[29] << 8) | (header[30] << 16) | (header[31] << 24);
+	
+	if(header[84] == 'D') {
+		switch(header[87]) {
+			case '1': // DXT1
+				format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+				blockSize = 8;
+				break;
+			case '3': // DXT3
+				format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+				blockSize = 16;
+				break;
+			case '5': // DXT5
+				format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+				blockSize = 16;
+				break;
+			case '0': // DX10
+			default: goto exit;
+		}
+	} else
+		goto exit;
+
+	buffer = malloc(file_size);
+	if(buffer == 0)
+		goto exit;
+	memcpy(buffer, &imgdata[128], file_size);
+
+	unsigned int offset = 0;
+	unsigned int size = 0;
+	w = width;
+	h = height;
+
+	for (unsigned int i=0; i<mipMapCount; i++) {
+		if(w == 0 || h == 0) {
+			mipMapCount--;
+			continue;
+		}
+		size = ((w+3)/4) * ((h+3)/4) * blockSize;
+		glCompressedTexImage2D(GL_TEXTURE_2D, i, format, w, h, 0, size, buffer + offset);
+		offset += size;
+		w /= 2;
+		h /= 2;
+	}
+	found = true;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, configFiltering == 0 ? 0 : mipMapCount-1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, configFiltering == 0 ? GL_NEAREST_MIPMAP_NEAREST : GL_LINEAR_MIPMAP_LINEAR);
+exit:
+	free(buffer);
+	free(header);
+	free(imgdata);
+	return found;
+}
+
 static inline void load_texture(const char *fullpath) {
     int w, h;
     u64 imgsize = 0;
@@ -607,16 +703,100 @@ static void import_texture(int tile) {
         return;
     }
 
+#ifdef EXTERNAL_DATA
+    char texture_name[120];
+    strcpy(texture_name, (const char*)rdp.loaded_texture[tile].addr);
+#endif
     if (gfx_texture_cache_lookup(tile, &rendering_state.textures[tile], rdp.loaded_texture[tile].addr, fmt, siz)) {
+#ifdef EXTERNAL_DATA
+        if (strcmp(texture_name, texture_metal) == 0) {
+            if (metal_saved > 1) {
+                if (metal_saved == 2) {
+				
+                    //Blend the image captured from the last rendered frame and the mario_metal.rgba16.png texture together,
+                    //resizing it to the smaller width and height with a nearest algorithm and making the alpha weaker to the center so we don't see mario.
+                    int w_min = metal_w < metal_ow ? metal_w : metal_ow;
+                    int h_min = metal_h < metal_oh ? metal_h : metal_oh;
+                    unsigned char* blended;
+                    blended = malloc (sizeof (unsigned char) * (4 * w_min * h_min));
+                    int i_o = 0, i_d = 0;
+                    for (int i = 0; i < h_min; ++i) {
+                        int j_o = 0, j_d = 0;
+                        for (int j = 0; j < w_min; ++j) {
+                            int r = 4 * j + w_min * i * 4;
+                            int g = r + 1;
+                            int b = r + 2;
+                            int r_o = 4 * j_o + metal_ow * i_o * 4;
+                            int g_o = r_o + 1;
+                            int b_o = r_o + 2;
+                            int r_d = 4 * j_d + metal_w * i_d * 4;
+                            int g_d = r_d + 1;
+                            int b_d = r_d + 2;
+                            float to_center = 2.f * sqrt(fabs((float)((w_min / 2.f - j) / (w_min / 2.f))));
+                            to_center += 2.f * sqrt(fabs((float)((h_min / 2.f - j) / (h_min / 2.f))));
+                            blended[r] = (metal_data[r_d] * to_center + metal_original[r_o] * (4.f - to_center)) / 4.f;
+                            blended[g] = (metal_data[g_d] * to_center + metal_original[g_o] * (4.f - to_center)) / 4.f;
+                            blended[b] = (metal_data[b_d] * to_center + metal_original[b_o] * (4.f - to_center)) / 4.f;
+                            blended[r + 4] = 255;
+                            j_o += floor((metal_ow - j_o) / (w_min - j));
+                            j_d += floor((metal_w - j_d) / (w_min - j));
+                        }
+                        i_o += floor((metal_oh - i_o) / (h_min - i));
+                        i_d += floor((metal_h - i_d) / (h_min - i));
+                    }
+                    
+                    gfx_rapi->upload_texture(blended, w_min, h_min);
+                    free(blended);
+                    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                }
+                if (metal_saved >= ceil(60 / configMetalRate))
+                    metal_saved = 1;
+                else if (metal_can_add) {
+                    metal_can_add = false;
+                    metal_saved++;
+                }
+                return;
+            } else {
+                metal_saved = 1;
+                return;
+            }
+        } else {
+            if (!configWindow.aa_changed) return;
+        }
+#else
         return;
+#endif
+#ifdef EXTERNAL_DATA
+    } else if (strcmp(texture_name, texture_metal) == 0) {
+        if (metal_saved == -1) {
+            char tex_original[SYS_MAX_PATH];
+            snprintf(tex_original, sizeof(tex_original), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
+            int c;
+            stbi_info(tex_original, &metal_ow, &metal_oh, &c);
+            u64 imgsize = 0;
+            u8 *imgdata = fs_load_file(tex_original, &imgsize);
+            imgdata = fs_load_file(tex_original, &imgsize);
+            if (imgdata) {
+                metal_original = stbi_load_from_memory(imgdata, imgsize, &metal_ow, &metal_oh, NULL, 4);
+                free(imgdata);
+            }
+        }
+        metal_saved = 1;
+        return;
+#endif
     }
 
 #ifdef EXTERNAL_DATA
     // the "texture data" is actually a C string with the path to our texture in it
     // load it from an external image in our data path
     char texname[SYS_MAX_PATH];
-    snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
-    load_texture(texname);
+    snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.dds", (const char*)rdp.loaded_texture[tile].addr);
+    bool found_dds = load_DDS(texname);
+    if (!found_dds) {
+        snprintf(texname, sizeof(texname), FS_TEXTUREDIR "/%s.png", (const char*)rdp.loaded_texture[tile].addr);
+        load_texture(texname);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
 #else
     // the texture data is actual texture data
     int t0 = get_time();
@@ -863,6 +1043,17 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     struct LoadedVertex *v_arr[3] = {v1, v2, v3};
     
     //if (rand()%2) return;
+    float alphadis = 1.f;
+    if (gNumStaticSurfaces > 10) {
+        double distance1 = sqrt(((v1->x - 0) * (v1->x - 0)) + ((v1->y - 0) * (v1->y - 0)) + ((v1->z - 0) * (v1->z - 0))) / 85;
+        double distance2 = sqrt(((v2->x - 0) * (v2->x - 0)) + ((v2->y - 0) * (v2->y - 0)) + ((v2->z - 0) * (v2->z - 0))) / 85;
+        double distance3 = sqrt(((v3->x - 0) * (v3->x - 0)) + ((v3->y - 0) * (v3->y - 0)) + ((v3->z - 0) * (v3->z - 0))) / 85;
+        double closestdis = distance1 < distance2 ? distance1 : distance2;
+        closestdis = closestdis < distance3 ? closestdis : distance3;
+        if (gCurrLevelNum > 1 && closestdis > configDrawDistance) return;
+        float alphastart = configDrawDistance / 1.14;
+        alphadis = closestdis > alphastart ? 1.f - (closestdis - alphastart) / (configDrawDistance - alphastart) : 1.f;
+    }
     
     if (v1->clip_rej & v2->clip_rej & v3->clip_rej) {
         // The whole triangle lies outside the visible area
@@ -932,10 +1123,20 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
     
     uint32_t cc_id = rdp.combine_mode;
     
-    bool use_alpha = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
+    //bool use_alpha = (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0;
+    bool use_alpha = alphadis == 1.f ? (rdp.other_mode_l & (G_BL_A_MEM << 18)) == 0 : 1;
     bool use_fog = (rdp.other_mode_l >> 30) == G_BL_CLR_FOG;
     bool texture_edge = (rdp.other_mode_l & CVG_X_ALPHA) == CVG_X_ALPHA;
     bool use_noise = (rdp.other_mode_l & G_AC_DITHER) == G_AC_DITHER;
+    bool use_coverage = (rdp.other_mode_l & G_AC_COVERAGE) == G_AC_COVERAGE;
+    
+    glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    glDisable(GL_SAMPLE_ALPHA_TO_ONE);
+    if (use_coverage) {
+        glDepthMask(GL_TRUE);
+        glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+        glEnable(GL_SAMPLE_ALPHA_TO_ONE);
+    }
     
     if (texture_edge) {
         use_alpha = true;
@@ -1055,9 +1256,9 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
                 } else {
                     if (use_fog && color == &v_arr[i]->color) {
                         // Shade alpha is 100% for fog
-                        buf_vbo[buf_vbo_len++] = 1.0f;
+                        buf_vbo[buf_vbo_len++] = 1.0f * alphadis;
                     } else {
-                        buf_vbo[buf_vbo_len++] = color->a / 255.0f;
+                        buf_vbo[buf_vbo_len++] = color->a / 255.0f * alphadis;
                     }
                 }
             }
@@ -1785,7 +1986,8 @@ void gfx_run(Gfx *commands) {
     
     //puts("New frame");
     
-    if (!gfx_wapi->start_frame()) {
+    if (!gfx_wapi->start_frame() || frame_skip == 2) {
+        frame_skip = 1;
         dropped_frame = true;
         return;
     }
@@ -1794,11 +1996,26 @@ void gfx_run(Gfx *commands) {
     double t0 = gfx_wapi->get_time();
     gfx_rapi->start_frame();
     gfx_run_dl(commands);
+#ifdef EXTERNAL_DATA
+    metal_can_add = true;
+    if (metal_saved == 1) {
+        metal_saved = 2;
+        metal_w = gfx_current_dimensions.width;
+        metal_h = gfx_current_dimensions.height * 2 / 3;
+        if (!metal_data)
+            metal_data = malloc (sizeof (unsigned char) * (4 * metal_w * metal_h));
+        else
+            metal_data = realloc(metal_data, sizeof (unsigned char) * (4 * metal_w * metal_h));
+        glReadPixels(0, gfx_current_dimensions.height / 10, metal_w, metal_h, GL_RGBA, GL_UNSIGNED_BYTE, metal_data);
+    } else if (metal_saved == 2)
+        metal_saved = 0;
+#endif
     gfx_flush();
     double t1 = gfx_wapi->get_time();
     //printf("Process %f %f\n", t1, t1 - t0);
     gfx_rapi->end_frame();
     gfx_wapi->swap_buffers_begin();
+    if (configWindow.aa_changed) configWindow.aa_changed = false;
 }
 
 void gfx_end_frame(void) {

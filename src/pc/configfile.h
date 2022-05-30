@@ -6,7 +6,7 @@
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 
 #define MAX_BINDS  3
-#define MAX_VOLUME 127
+#define MAX_VOLUME 100
 
 typedef struct {
     unsigned int x, y, w, h;
@@ -15,10 +15,12 @@ typedef struct {
     bool fullscreen;
     bool exiting_fullscreen;
     bool settings_changed;
+    bool aa_changed;
 } ConfigWindow;
 
 extern ConfigWindow configWindow;
 extern unsigned int configFiltering;
+extern bool         configAntiAliasing;
 extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;
@@ -37,6 +39,9 @@ extern unsigned int configKeyStickUp[];
 extern unsigned int configKeyStickDown[];
 extern unsigned int configKeyStickLeft[];
 extern unsigned int configKeyStickRight[];
+extern unsigned int configKeyMouseToStick[];
+extern unsigned int configKeyWalk[];
+extern unsigned int configSpeed;
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 #ifdef EXTERNAL_DATA
@@ -51,14 +56,22 @@ extern unsigned int configCameraDegrade;
 extern bool         configCameraInvertX;
 extern bool         configCameraInvertY;
 extern bool         configEnableCamera;
+extern bool         configCameraFOV;
 extern bool         configCameraMouse;
 extern bool         configCameraAnalog;
 #endif
+extern bool         configInputDisplay;
+extern bool         configFrameskip;
 extern bool         configHUD;
+#ifndef NODRAWINGDISTANCE
+extern unsigned int configDrawDistance;
+#endif
+extern unsigned int configMetalRate;
 extern bool         configSkipIntro;
 #ifdef DISCORDRPC
 extern bool         configDiscordRPC;
 #endif
+extern unsigned int configLives;
 
 void configfile_load(const char *filename);
 void configfile_save(const char *filename);
