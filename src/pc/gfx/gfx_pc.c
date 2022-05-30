@@ -1207,11 +1207,11 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
             if (rdp.other_mode_h) {
                 // Linear filter adds 0.5f to the coordinates
-                u += (use_alpha ? 0.3f : 0.5f);
-                v += (use_alpha ? 0.3f : 0.7f);
+                u += 0.5f;
+                v += (use_alpha ? 0.4f : 0.5f);
             }
-            buf_vbo[buf_vbo_len++] = u / tex_width * (use_alpha ? 0.99f : 1.0f);
-            buf_vbo[buf_vbo_len++] = v / tex_height * (use_alpha ? 0.97f : 1.005f);
+            buf_vbo[buf_vbo_len++] = u / tex_width;
+            buf_vbo[buf_vbo_len++] = v / tex_height * (use_alpha ? 1.0f : 1.005f);
         }
         
         if (use_fog) {
