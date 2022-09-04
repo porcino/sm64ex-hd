@@ -187,7 +187,7 @@ static size_t buf_vbo_num_tris;
 static struct GfxWindowManagerAPI *gfx_wapi;
 static struct GfxRenderingAPI *gfx_rapi;
 
-#ifdef EXTERNAL_DATA				
+#ifdef EXTERNAL_DATA
 static char texture_metal[35] = "actors/mario/mario_metal.rgba16";
 static unsigned char* metal_data;
 static unsigned char* metal_original;
@@ -195,7 +195,7 @@ static int metal_saved = -1;
 static int metal_w, metal_h;
 static int metal_ow, metal_oh;
 static bool metal_can_add = true;
-#endif 
+#endif
 // 4x4 pink-black checkerboard texture to indicate missing textures
 #define MISSING_W 4
 #define MISSING_H 4
@@ -706,7 +706,7 @@ static void import_texture(int tile) {
 #ifdef EXTERNAL_DATA
     char texture_name[120];
     strcpy(texture_name, (const char*)rdp.loaded_texture[tile].addr);
-#endif	  
+#endif
     if (gfx_texture_cache_lookup(tile, &rendering_state.textures[tile], rdp.loaded_texture[tile].addr, fmt, siz)) {
 #ifdef EXTERNAL_DATA
         if (strcmp(texture_name, texture_metal) == 0) {
@@ -1179,7 +1179,7 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
                 import_texture(i);
                 rdp.textures_changed[i] = false;
             }
-            bool linear_filter = configFiltering && ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT);
+            bool linear_filter = configFiltering && (rdp.other_mode_h);
             if (linear_filter != rendering_state.textures[i]->linear_filter || rdp.texture_tile.cms != rendering_state.textures[i]->cms || rdp.texture_tile.cmt != rendering_state.textures[i]->cmt) {
                 gfx_flush();
                 gfx_rapi->set_sampler_parameters(i, linear_filter, rdp.texture_tile.cms, rdp.texture_tile.cmt);
@@ -1209,7 +1209,7 @@ static void gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t vtx3_idx) {
         if (use_texture) {
             float u = (v_arr[i]->u - rdp.texture_tile.uls * 8) / 32.0f;
             float v = (v_arr[i]->v - rdp.texture_tile.ult * 8) / 32.0f;
-            if ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT) {
+            if (rdp.other_mode_h) {
                 // Linear filter adds 0.5f to the coordinates
                 u += 0.5f;
                 v += 0.5f;
